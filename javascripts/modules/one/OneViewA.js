@@ -7,11 +7,13 @@ define(['jquery', 'backbone', 'text!modules/one/templates/form.html'], function(
 
       var self = this;
       _.each(this.events,function(val,key){
-        self.mediator.on('one:' + val, self[val] );
+        self.mediator.on('one/' + val, self[val] );
       });
+
+      
     },
     events: {
-      'click .something': 'test:test',
+      'click .something': 'test/test',
       'click a.link': 'changeName',
       'submit form': 'submitForm'
     },
@@ -19,7 +21,7 @@ define(['jquery', 'backbone', 'text!modules/one/templates/form.html'], function(
       this.$el.html(form);
       return this;
     },
-    "test:test": function() {
+    "test/test": function() {
       alert('something clicked');
     },
     "changeName": function(e) {

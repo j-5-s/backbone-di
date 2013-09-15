@@ -23,29 +23,33 @@ define(['jquery',
           params.push(args.pop());
         }
       })
-      debugger;
-      mediator.trigger(args.join(':'), params);
+      mediator.trigger(args.join('/'), params);
     }
   });
 
+  var start = function (){
+    var r = new Router({mediator:mediator});
+    var oneModel = new OneModel({router:r});
 
-  var r = new Router({mediator:mediator});
-  var oneModel = new OneModel({router:r});
+    var oneViewA = new OneViewA({mediator: mediator, router: r, model: oneModel});
 
-  var oneViewA = new OneViewA({mediator: mediator, router: r, model: oneModel});
+    var oneViewB = new OneViewB({mediator:mediator, router:r, model: oneModel});
 
-  var oneViewB = new OneViewB({mediator:mediator, router:r, model: oneModel});
-
-  Backbone.history.start();
+    Backbone.history.start();
 
 
-  $('#oneViewA').html(oneViewA.render().el);
+    $('#oneViewA').html(oneViewA.render().el);
 
-  $('#oneViewB').html(oneViewB.render().el);
+    $('#oneViewB').html(oneViewB.render().el);
+
+    return {
+      router: r,
+      views: [oneViewA] 
+    };
+  }
 
   return {
-    router: r,
-    views: [oneViewA] 
-  };
+    start: start
+  }
 
 });

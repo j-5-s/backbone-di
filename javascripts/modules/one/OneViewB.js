@@ -9,8 +9,7 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
       var self = this;
       _.each(this.events,function(val,key){
         console.log('setting up routes for v biew: one:'+ val + ' - fn' )
-
-        self.mediator.on('one:' + val, self[val] );
+        self.mediator.on('one/' + val, self[val] );
       });
     },
     events: {
@@ -25,7 +24,7 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
       this.$el.html('BView: name ' + this.model.get('name') );
       return this;
     },
-    "test:b": function() {
+    "test/b": function() {
       alert('something b clicked');
     }
   });

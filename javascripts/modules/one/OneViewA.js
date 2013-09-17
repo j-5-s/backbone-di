@@ -1,14 +1,23 @@
-define(['jquery', 'backbone', 'text!modules/one/templates/form.html'], function( $, Backbone, form ) {
+define(['jquery',
+        'backbone',
+        'text!modules/one/templates/form.html',
+        'dataStore'], function( $, Backbone, form, dataStore ) {
 
   var OneViewA = Backbone.View.extend({
+    
     initialize: function(options) {
-      this.mediator = options.mediator;
-      this.router = options.router;
-
+      
+      _.bindAll(this, 'render')
       var self = this;
-      _.each(this.events,function(val,key){
-        self.mediator.on('one/' + val, self[val] );
+
+      
+      dataStore.register(['collections/OneCollection', 'models/OneModel'],function(){
+        self.model = dataStore.get('models/OneModel');
+        self.render();
       });
+
+    
+      var self = this;
 
       
     },
@@ -18,12 +27,14 @@ define(['jquery', 'backbone', 'text!modules/one/templates/form.html'], function(
       'submit form': 'submitForm'
     },
     render: function(){
+      if ( !dataStore.isReady ) {
+        return this;
+      }
+
       this.$el.html(form);
       return this;
     },
-    "test/test": function() {
-      alert('something clicked');
-    },
+
     "changeName": function(e) {
       e.preventDefault();
       console.log('changeName clicked')

@@ -3,47 +3,40 @@ define(['jquery',
         'mediator',
         'modules/one/OneViewA',
         'modules/one/OneViewB',
-        'models/OneModel'], 
-      function( $, Backbone, mediator, OneViewA, OneViewB, OneModel ) {
+        'dataStore'], 
+      function( $, Backbone, mediator, OneViewA, OneViewB, dataStore ) {
 
   var Router = Backbone.Router.extend({
     initialize: function( options ){
-      this.mediator = options.mediator;
     },
     routes: {
-      '*actions': 'routeIt'
+      '': 'routeIt'
     },
     routeIt: function( url ) {
-      url = url || '';
-      args = url.split('/');
-      console.log('routing to ' + args.join(':'))
-      var params = [];
-      _.each(args, function(arg){
-        if (arg[0] === ':') {
-          params.push(args.pop());
-        }
-      })
-      mediator.trigger(args.join('/'), params);
+      console.log('main')
     }
   });
 
   var start = function (){
-    var r = new Router({mediator:mediator});
-    var oneModel = new OneModel({router:r});
-
-    var oneViewA = new OneViewA({mediator: mediator, router: r, model: oneModel});
-
-    var oneViewB = new OneViewB({mediator:mediator, router:r, model: oneModel});
-
-    Backbone.history.start();
 
 
-    $('#oneViewA').html(oneViewA.render().el);
 
-    $('#oneViewB').html(oneViewB.render().el);
+
+      var oneViewA = new OneViewA();
+
+
+      Backbone.history.start();
+
+
+      $('#oneViewA').html(oneViewA.render().el);
+
+
+
+    
+
+
 
     return {
-      router: r,
       views: [oneViewA] 
     };
   }

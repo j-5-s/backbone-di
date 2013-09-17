@@ -4,13 +4,11 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
     defaults: {
       name: 'ModelOne'
     },
+    url: 'http://localhost:9003/one-collection.json',
     initialize: function(options) {
-      var router = options.router
       this.on('change:name', function() {
-        var name = this.get('name');
-        console.log('navigating to one/name/'+name );
-        router.navigate('one/name/:'+name, {trigger:true});
-      })
+     
+      });
     }
   });
 

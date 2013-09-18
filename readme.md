@@ -1,3 +1,2 @@
-#Event Routing
-This is a test project to develop a design pattern to route all backbone
-events via a url.
+#Data Store
+This is a build project to think out a dataStore middleware for backbone.js with requirejs

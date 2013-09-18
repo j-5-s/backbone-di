@@ -15,9 +15,6 @@ define(['jquery',
       });
     },
     events: {
-      'click .something': 'test/test',
-      'click a.link': 'changeName',
-      'submit form': 'submitForm'
     },
     //render turns into the a view that renders before the data is ready
     //commonly a loader
@@ -27,7 +24,7 @@ define(['jquery',
     },
     //renderReady gets called when the models have loaded (see initialize)
     renderReady: function() {
-      this.$el.html('View loaded with model that has name \'' + this.model.get('name') + '\');
+      this.$el.html('View loaded with model that has name \'' + this.model.get('name') + \'');
       return this;
     }
   });

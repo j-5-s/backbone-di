@@ -19,22 +19,13 @@ define(['jquery',
 
   var start = function (){
 
-
-
-
-      var oneViewA = new OneViewA();
-
-
-      Backbone.history.start();
-
-
-      $('#oneViewA').html(oneViewA.render().el);
-
-
-
-    
-
-
+    //OneViewA, requires a model, but that model
+    //is called for within the view itself
+    //it may already be in memory, localStorage (@todo)
+    //or if not, it will fetch from the server
+    var oneViewA = new OneViewA();
+    Backbone.history.start();
+    $('#oneViewA').html(oneViewA.render().el);
 
     return {
       views: [oneViewA] 

@@ -1,4 +1,4 @@
-define(['jquery', 'backbone', 'modules/one/OneControler'], function( $, Backbone, OneController ) {
+define(['jquery', 'backbone', 'modules/one/OneController'], function( $, Backbone, OneController ) {
     
 
 

@@ -7,43 +7,29 @@ define(['jquery',
     
     initialize: function(options) {
       
-      _.bindAll(this, 'render')
+      _.bindAll(this, 'render', 'renderReady');
       var self = this;
 
-      
-      dataStore.register(['collections/OneCollection', 'models/OneModel'],function(){
+      dataStore.register(['collections/OneCollection', 'models/OneModel']).done(function(args){
         self.model = dataStore.get('models/OneModel');
-        self.render();
+        self.renderReady();
       });
-
-    
-      var self = this;
-
-      
     },
     events: {
       'click .something': 'test/test',
       'click a.link': 'changeName',
       'submit form': 'submitForm'
     },
+    //render turns into the a view that renders before the data is ready
+    //commonly a loader
     render: function(){
-      if ( !dataStore.isReady ) {
-        return this;
-      }
-
-      this.$el.html(form);
+      this.$el.html('loading...');
       return this;
     },
-
-    "changeName": function(e) {
-      e.preventDefault();
-      console.log('changeName clicked')
-      this.model.set('name', 'newName');
-    },
-    submitForm: function(e) {
-      e.preventDefault();
-      var name = $('form').find('input').val();
-      this.model.set('name', name);
+    //renderReady gets called when the models have loaded (see initialize)
+    renderReady: function() {
+      this.$el.html(form);
+      return this;
     }
   });
 

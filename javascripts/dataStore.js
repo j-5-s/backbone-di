@@ -9,7 +9,7 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
    * @classdesc A module that keeps track of data. Goal is to create a singleton
    * that looks at localStorage or app variables for instantiated data
    * and returns them or instantiates a new one if none exists
-   * 
+   *
    */
   var DataStore = function() {
     this.events = _.extend({},Backbone.Events);
@@ -21,40 +21,65 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
 
   /**
    * Registers collections or models
-   * @param {Array} [filePaths] - requirejs file paths to grab
-   * @param {Function} [complete] - Optional callback to fire when module
+   * @param {Array} [collections] - requirejs file paths to grab
+   * @returns {Deferred} - jQuery Deferred object loading is complete
+   * @desc a ready event will get trigger when each model has been loaded
+   * in the following naming convention ready:<file/path>
+   * <file/path> being the value passed into the first parameter.
    * loading is complete.
    */
-  DataStore.prototype.register = function(collections, complete) {
+  DataStore.prototype.register = function( collections ) {
     var self = this;
+    var dfd = $.Deferred();
     //only add the collections that don't exist
+    //so remove the ones that do
     _.each(collections, function(name, i) {
       if (typeof self.cache[name] !== 'undefined') {
         collections.splice(i,1);
       }
     });
-
+    //instantiate the new models
     require(collections, function(){
       var args = slice.call(arguments);
-      _.each(args, function(arg,i){
-        self.cache[collections[i]] = new arg();
+      var dfds = [];
+      
+      _.each(args, function(Arg, i){
+        var mDfd = $.Deferred();
+        self.cache[collections[i]] = new Arg();
+        //fetch the data from the database
+        //@todo, add local storage
+        (function(obj,name){
+          obj.fetch({async:false,success:function(modelOrCollection){
+            self.events.trigger('ready:'+ name, obj);
+            mDfd.resolve();
+          }});
+        }(self.cache[collections[i]],collections[i]));
+
+        dfds.push(mDfd);
       });
 
-      var data = _.toArray(self.cache)
-      self.events.trigger('ready',data);
-      if (typeof complete !== 'undefined') {
-        complete.apply(self, data);
-      } 
+      $.when.apply($, dfds).done(function(){
+        dfd.resolve();
+        self.events.trigger('ready');
+      }).fail(function( m ){
+        throw new Error('Failed call');
+      });
     });
+    return dfd.promise();
   };
 
+  /**
+   * Simple method to get the model/collection from the datastore
+   * the method must first have been registered (see @register)
+   * @returns {Mixed} [model or collection]
+   * @throws {Error} - if no model/collection is saved in the cache
+   */
   DataStore.prototype.get = function( filepath ) {
     if (typeof this.cache[filepath] !== 'undefined') {
-      return this.cache[filepath];
+       return this.cache[filepath];
     }
-
-    throw new Error( filepath + ' has not been registered' );
-  }
+    throw new Error ( filepath + " is not defined." );
+  };
 
   var dataStore;
 

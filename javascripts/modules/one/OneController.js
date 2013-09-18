@@ -1,10 +1,8 @@
 define(['jquery',
         'backbone',
-        'mediator',
         'modules/one/OneViewA',
-        'modules/one/OneViewB',
         'dataStore'], 
-      function( $, Backbone, mediator, OneViewA, OneViewB, dataStore ) {
+      function( $, Backbone, OneViewA, dataStore ) {
 
   var Router = Backbone.Router.extend({
     initialize: function( options ){

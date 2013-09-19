@@ -33,13 +33,20 @@ for full example);
 
 ```javascript
 define(['jquery', 'backbone', 'dataStore'], function( $, Backbone, dataStore ) {
+
   var OneViewA = Backbone.View.extend({
     
     initialize: function(options) {
-      
       _.bindAll(this, 'render', 'renderReady');
-      dataStore.register(['collections/OneCollection', 'models/OneModel/1']).done(this.renderReady);
-
+      var self = this;
+      dataStore.register(['collections/OneCollection', 'models/OneModel?id=1']).done(function( oneCollection, oneModel ){
+        //could get model like this as well now
+        //self.model = dataStore.get('models/OneModel?id=1');
+        //but its simpler to use it in the parameter callback
+        self.model = oneModel;
+        self.model.on('change:name', self.renderReady);
+        self.renderReady();
+      });
     },
     events: {
     },
@@ -51,7 +58,6 @@ define(['jquery', 'backbone', 'dataStore'], function( $, Backbone, dataStore ) {
     },
     //renderReady gets called when the models have loaded (see initialize)
     renderReady: function() {
-      this.model = dataStore.get('models/OneModel/1');
       this.$el.html('View loaded with model that has name \'' + this.model.get('name') + '\'');
       return this;
     }
@@ -59,5 +65,4 @@ define(['jquery', 'backbone', 'dataStore'], function( $, Backbone, dataStore ) {
 
   return OneViewA;
 });
-
 ```

@@ -29,8 +29,10 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
    * loading is complete.
    */
   DataStore.prototype.register = function( collections, options ) {
-    var self = this;
-    var dfd = $.Deferred();
+    var self = this,
+        dfd = $.Deferred(),
+        originalCollections = collections;
+
     options = options || {};
     if (typeof options.reset === 'undefined') {
       options.reset = false;
@@ -99,7 +101,10 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
       });
 
       $.when.apply($, dfds).done(function(){
-        dfd.resolve();
+        var args = _.map(originalCollections, function(col){
+          return self.cache[col];
+        });
+        dfd.resolve.apply( null, args );
         self.events.trigger('ready');
         self.saveToLocalStorage();
       }).fail(function( m ){

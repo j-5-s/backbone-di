@@ -52,7 +52,7 @@ define(['jquery', 'backbone', 'dataStore'], function( $, Backbone, dataStore ) {
     //renderReady gets called when the models have loaded (see initialize)
     renderReady: function() {
       this.model = dataStore.get('models/OneModel/1');
-      this.$el.html('View loaded with model that has name \'' + this.model.get('name') + \'');
+      this.$el.html('View loaded with model that has name \'' + this.model.get('name') + '\'');
       return this;
     }
   });

@@ -28,9 +28,13 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
    * <file/path> being the value passed into the first parameter.
    * loading is complete.
    */
-  DataStore.prototype.register = function( collections ) {
+  DataStore.prototype.register = function( collections, options ) {
     var self = this;
     var dfd = $.Deferred();
+    options = options || {};
+    if (typeof options.reset === 'undefined') {
+      options.reset = false;
+    }
     //only add the collections that don't exist
     //so remove the ones that do
     var idMap = {};
@@ -38,6 +42,9 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
       if (typeof self.cache[name] !== 'undefined') {
         collections.splice(i,1);
       }
+
+
+
       //check models for id's being passed and remove them if they exist
       var params = name.split('?');
       if (params.length > 1) {
@@ -55,21 +62,39 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
       var dfds = [];
       _.each(args, function(Arg, i){
         var mDfd = $.Deferred();
-        var params = {};
+        var params;
         if (typeof idMap[collections[i]] !== 'undefined') {
+          params = {};
           var id = idMap[collections[i]];
           params.id = id;
           collections[i] += '?id=' + id;
         }
+
+        //check for data in localStorage to populate with
+        var data = self.getFromLocalStorage(collections[i]);
+
+        if (data) {
+          params = data;
+        }
         self.cache[collections[i]] = new Arg(params);
+        self.cache[collections[i]]._dataStoreKey = collections[i];
+        self.cache[collections[i]].on('sync', function(model) {
+          self.saveToLocalStorage( model );
+        });
         //fetch the data from the database
-        //@todo, add local storage
-        (function(obj,name){
-          obj.fetch({async:false,success:function(modelOrCollection){
+        (function( obj, name, data ){
+          if (data && !options.reset) {
             self.events.trigger('ready:'+ name, obj);
             mDfd.resolve();
-          }});
-        }(self.cache[collections[i]],collections[i]));
+          } else {
+            obj.fetch().done(function(){
+              self.events.trigger('ready:'+ name, obj);
+              mDfd.resolve();
+            });
+          }
+
+
+        }(self.cache[collections[i]],collections[i],data));
 
         dfds.push(mDfd);
       });
@@ -77,6 +102,7 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
       $.when.apply($, dfds).done(function(){
         dfd.resolve();
         self.events.trigger('ready');
+        self.saveToLocalStorage();
       }).fail(function( m ){
         throw new Error('Failed call');
       });
@@ -96,6 +122,51 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
     }
     throw new Error ( filepath + " is not defined." );
   };
+
+  /**
+   * Saves the models and collections in the `cache` property
+   * to localStorage
+   */
+  DataStore.prototype.saveToLocalStorage = function( obj ) {
+    if (typeof obj === 'undefined') {
+      try {
+        _.each(this.cache, function(modelOrCollection, key){
+          var strData = JSON.stringify(modelOrCollection.toJSON());
+          window.localStorage.setItem(key, strData);
+        });
+      } catch(e) {
+        //local storage is probably not supported
+      }
+    } else {
+      try {
+        var strData = JSON.stringify(obj.toJSON());
+        window.localStorage.setItem(obj._dataStoreKey, strData);
+      } catch(e) {
+        //local storage is probably not supported
+      }
+    }
+  };
+
+  DataStore.prototype.getFromLocalStorage = function( key ) {
+    if (typeof key === 'undefined') {
+      throw new Error('Key not provided to get from localStorage');
+    }
+    var data;
+    try {
+      data = JSON.parse(window.localStorage.getItem(key));
+    } catch(e) {
+      //localStorage likely not supported
+    }
+    return data;
+  };
+
+  DataStore.prototype.removeFromLocalStorage = function( key ) {
+    try {
+      delete window.localStorage[key];
+    } catch(e) {
+      //silence
+    }
+  }
 
   var dataStore;
 

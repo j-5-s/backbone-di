@@ -5,10 +5,13 @@ define(['jquery',
   var OneViewA = Backbone.View.extend({
     
     initialize: function(options) {
-      
       _.bindAll(this, 'render', 'renderReady');
-      dataStore.register(['collections/OneCollection', 'models/OneModel?id=1']).done(this.renderReady);
-
+      var self = this
+      dataStore.register(['collections/OneCollection', 'models/OneModel?id=1']).done(function(){
+        self.model = dataStore.get('models/OneModel?id=1');
+        self.model.on('change:name', self.renderReady);
+        self.renderReady();
+      });
     },
     events: {
     },
@@ -20,7 +23,6 @@ define(['jquery',
     },
     //renderReady gets called when the models have loaded (see initialize)
     renderReady: function() {
-      this.model = dataStore.get('models/OneModel?id=1');
       this.$el.html('View loaded with model that has name \'' + this.model.get('name') + '\'');
       return this;
     }

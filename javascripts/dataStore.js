@@ -93,7 +93,6 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
             });
           }
 
-
         }(self.cache[collections[i]],collections[i],data));
 
         dfds.push(mDfd);
@@ -166,7 +165,7 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
     } catch(e) {
       //silence
     }
-  }
+  };
 
   var dataStore;
 

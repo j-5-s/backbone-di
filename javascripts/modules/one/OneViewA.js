@@ -6,7 +6,7 @@ define(['jquery',
     
     initialize: function(options) {
       _.bindAll(this, 'render', 'renderReady');
-      var self = this
+      var self = this;
       dataStore.register(['collections/OneCollection', 'models/OneModel?id=1']).done(function(){
         self.model = dataStore.get('models/OneModel?id=1');
         self.model.on('change:name', self.renderReady);

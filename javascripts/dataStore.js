@@ -33,19 +33,35 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
     var dfd = $.Deferred();
     //only add the collections that don't exist
     //so remove the ones that do
+    var idMap = {};
     _.each(collections, function(name, i) {
       if (typeof self.cache[name] !== 'undefined') {
         collections.splice(i,1);
       }
+      //check models for id's being passed and remove them if they exist
+      var params = name.split('?');
+      if (params.length > 1) {
+        name = params[0];
+        collections[i] = name;
+        idMap[name] = params[1].substring('3', params[1].length);
+      }
     });
+
+    
+
     //instantiate the new models
     require(collections, function(){
       var args = slice.call(arguments);
       var dfds = [];
-      
       _.each(args, function(Arg, i){
         var mDfd = $.Deferred();
-        self.cache[collections[i]] = new Arg();
+        var params = {};
+        if (typeof idMap[collections[i]] !== 'undefined') {
+          var id = idMap[collections[i]];
+          params.id = id;
+          collections[i] += '?id=' + id;
+        }
+        self.cache[collections[i]] = new Arg(params);
         //fetch the data from the database
         //@todo, add local storage
         (function(obj,name){

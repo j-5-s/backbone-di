@@ -1,5 +1,5 @@
 define(['jquery',
-        'backbone'
+        'backbone',
         'dataStore'], function( $, Backbone, dataStore ) {
 
   var OneViewA = Backbone.View.extend({
@@ -7,12 +7,8 @@ define(['jquery',
     initialize: function(options) {
       
       _.bindAll(this, 'render', 'renderReady');
-      var self = this;
+      dataStore.register(['collections/OneCollection', 'models/OneModel?id=1']).done(this.renderReady);
 
-      dataStore.register(['collections/OneCollection', 'models/OneModel']).done(function(args){
-        self.model = dataStore.get('models/OneModel');
-        self.renderReady();
-      });
     },
     events: {
     },
@@ -24,12 +20,11 @@ define(['jquery',
     },
     //renderReady gets called when the models have loaded (see initialize)
     renderReady: function() {
-      this.$el.html('View loaded with model that has name \'' + this.model.get('name') + \'');
+      this.model = dataStore.get('models/OneModel?id=1');
+      this.$el.html('View loaded with model that has name \'' + this.model.get('name') + '\'');
       return this;
     }
   });
 
   return OneViewA;
-
-
 });

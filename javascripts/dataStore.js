@@ -177,6 +177,8 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
   if ( typeof window._dataStore === 'undefined') {
     dataStore = new DataStore();
     window._dataStore = dataStore;
+  } else {
+    dataStore = window._dataStore;
   }
 
 

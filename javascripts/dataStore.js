@@ -173,7 +173,7 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
   };
 
   var dataStore;
-
+  //dataStore is a singleton
   if ( typeof window._dataStore === 'undefined') {
     dataStore = new DataStore();
     window._dataStore = dataStore;

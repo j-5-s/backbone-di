@@ -5,14 +5,7 @@ for (var file in window.__karma__.files) {
     }
 }
 
-//unit tests need chrome obj
-var chrome = { tabs: {} };
-chrome.tabs.getSelected = function(tab, cb) {
-    var t = {
-        url: 'http://somedummyurl'
-    };
-    cb.call(null, t);
-};
+
 
 requirejs.config({
     // Karma serves files from '/base'

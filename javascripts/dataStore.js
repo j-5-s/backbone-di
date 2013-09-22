@@ -1,3 +1,10 @@
+/*! 
+DataStore Middelware for Backbone
+
+Copyright (c) 2013 James Charlesworth, contributors
+Licensed under the MIT license.
+*/
+
 define(['jquery', 'backbone'], function( $, Backbone ) {
 
   var slice = [].slice;
@@ -9,7 +16,6 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
    * @classdesc A module that keeps track of data. Goal is to create a singleton
    * that looks at localStorage or app variables for instantiated data
    * and returns them or instantiates a new one if none exists
-   *
    */
   var DataStore = function() {
     this.events = _.extend({},Backbone.Events);

@@ -26,6 +26,36 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
 
 
   /**
+   * Simple method to get the model/collection from the datastore
+   * the method must first have been registered (see @register)
+   * @returns {Mixed} [model or collection]
+   * @throws {Error} - if no model/collection is saved in the cache
+   */
+  DataStore.prototype.get = function( filepath ) {
+    if (typeof this.cache[filepath] !== 'undefined') {
+       return this.cache[filepath];
+    }
+    throw new Error ( filepath + " is not defined." );
+  };
+
+  /**
+   * Retrieves the object from localStorage
+   * @returns {Object} [model or collection]
+   */
+  DataStore.prototype.getFromLocalStorage = function( key ) {
+    if (typeof key === 'undefined') {
+      throw new Error('Key not provided to get from localStorage');
+    }
+    var data;
+    try {
+      data = JSON.parse(window.localStorage.getItem(key));
+    } catch(e) {
+      //localStorage likely not supported
+    }
+    return data;
+  };
+
+  /**
    * Registers collections or models
    * @param {Array} [collections] - requirejs file paths to grab
    * @returns {Deferred} - jQuery Deferred object loading is complete
@@ -121,16 +151,14 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
   };
 
   /**
-   * Simple method to get the model/collection from the datastore
-   * the method must first have been registered (see @register)
-   * @returns {Mixed} [model or collection]
-   * @throws {Error} - if no model/collection is saved in the cache
+   * Removes the object from localStorage
    */
-  DataStore.prototype.get = function( filepath ) {
-    if (typeof this.cache[filepath] !== 'undefined') {
-       return this.cache[filepath];
+  DataStore.prototype.removeFromLocalStorage = function( key ) {
+    try {
+      delete window.localStorage[key];
+    } catch(e) {
+      //silence
     }
-    throw new Error ( filepath + " is not defined." );
   };
 
   /**
@@ -157,33 +185,7 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
     }
   };
 
-  /**
-   * Retrieves the object from localStorage
-   * @returns {Object} [model or collection]
-   */
-  DataStore.prototype.getFromLocalStorage = function( key ) {
-    if (typeof key === 'undefined') {
-      throw new Error('Key not provided to get from localStorage');
-    }
-    var data;
-    try {
-      data = JSON.parse(window.localStorage.getItem(key));
-    } catch(e) {
-      //localStorage likely not supported
-    }
-    return data;
-  };
-
-  /**
-   * Removes the object from localStorage
-   */
-  DataStore.prototype.removeFromLocalStorage = function( key ) {
-    try {
-      delete window.localStorage[key];
-    } catch(e) {
-      //silence
-    }
-  };
+  //----------------------------------------------------------------//
 
   var dataStore;
   //dataStore is a singleton

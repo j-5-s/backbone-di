@@ -39,14 +39,15 @@ define(['jquery', 'backbone', 'dataStore'], function( $, Backbone, dataStore ) {
     initialize: function(options) {
       _.bindAll(this, 'render', 'renderReady');
       var self = this;
-      dataStore.register(['collections/OneCollection', 'models/OneModel?id=1']).done(function( oneCollection, oneModel ){
-        //could get model like this as well now
-        //self.model = dataStore.get('models/OneModel?id=1');
-        //but its simpler to use it in the parameter callback
-        self.model = oneModel;
-        self.model.on('change:name', self.renderReady);
-        self.renderReady();
-      });
+      dataStore.register(['collections/OneCollection', 'models/OneModel?id=1'])
+                .done(function( oneCollection, oneModel ){
+                  //could get model like this as well now
+                  //self.model = dataStore.get('models/OneModel?id=1');
+                  //but its simpler to use it in the parameter callback
+                  self.model = oneModel;
+                  self.model.on('change:name', self.renderReady);
+                  self.renderReady();
+                });
     },
     events: {
     },
@@ -66,3 +67,26 @@ define(['jquery', 'backbone', 'dataStore'], function( $, Backbone, dataStore ) {
   return OneViewA;
 });
 ```
+### Listening to events
+The `DataStore` object has the backbone event object on it and you can listen for `ready` and `ready:<eventname>`
+events to fire.
+```Javascript
+  dataStore.events.on('ready:models/OneModel?id=1', function(oneModel){
+    console.log('oneModel is ready');
+  });
+
+  dataStore.register(['collections/OneCollection', 'models/OneModel?id=1'])
+            .done(function( oneCollection, oneModel ){
+              //could get model like this as well now
+              //self.model = dataStore.get('models/OneModel?id=1');
+              //but its simpler to use it in the parameter callback
+              self.model = oneModel;
+              self.model.on('change:name', self.renderReady);
+              self.renderReady();
+            });
+
+  dataStore.events.on('ready', function(){
+    console.log('everything that was registered is ready');
+  });
+```
+

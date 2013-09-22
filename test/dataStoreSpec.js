@@ -8,6 +8,8 @@ define(['jquery', 'backbone', 'dataStore'], function($, Backbone, dataStore) {
           waitsFor(function(){
             return completed;
           });
+
+          dataStore.useLocalStorage = false;
           dataStore.register(['models/OneModel']).done(function(oneModel){
             expect(oneModel).toBeDefined();
             expect(oneModel.get('name')).toEqual('james');

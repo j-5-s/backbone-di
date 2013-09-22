@@ -5,6 +5,14 @@ to requirejs module loading but the exception is that there is a middleware that
 instantiate your models/collections if they dont exist in a local cache or localStorage 
 and then fetch the data from the server.
 
+## Install
+```
+git clone git@github.com:jamescharlesworth/backbone-datastore-middleware.git
+npm install
+node index.js
+```
+
+
 ## Use Case
 
 With backbonejs you usually pass dependencies into views when you instantiate them like this:

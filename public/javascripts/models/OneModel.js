@@ -4,7 +4,7 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
     defaults: {
       name: 'ModelOne'
     },
-    url: 'http://localhost:9003/one-model.json',
+    url: 'http://localhost:8080/one-model.json',
     initialize: function(options) {
       this.on('change:name', function() {
      

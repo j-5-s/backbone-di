@@ -22,6 +22,15 @@
         }
       }
     },
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js',
+        runnerPort: 9999,
+        //autoWatch: true,
+        singleRun: true,
+        browsers: ['PhantomJS']
+      }
+    },
     watch: {
       scripts: {
         files: ['javascripts/**/*.js','test/**/*.js'],
@@ -32,9 +41,10 @@
       }
     }
   });
-  
+  grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  
   grunt.registerTask('default', ['jshint', 'uglify']);
   grunt.loadNpmTasks('grunt-contrib-watch');
 

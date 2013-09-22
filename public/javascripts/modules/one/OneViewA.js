@@ -7,6 +7,7 @@ define(['jquery',
     initialize: function(options) {
       _.bindAll(this, 'render', 'renderReady');
       var self = this;
+      dataStore.useLocalStorage = false;
       dataStore.events.on('ready:models/OneModel?id=1', function(oneModel){
         console.log('oneModel is ready');
       });

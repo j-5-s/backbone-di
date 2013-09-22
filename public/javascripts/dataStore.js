@@ -21,6 +21,7 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
     this.events = _.extend({},Backbone.Events);
     this.isReady = false;
     this.cache = {};
+    this.useLocalStorage = true;
   };
 
 
@@ -43,6 +44,11 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
    * @returns {Object} [model or collection]
    */
   DataStore.prototype.getFromLocalStorage = function( key ) {
+
+    if (!this.getFromLocalStorage) {
+      return {};
+    }
+
     if (typeof key === 'undefined') {
       throw new Error('Key not provided to get from localStorage');
     }

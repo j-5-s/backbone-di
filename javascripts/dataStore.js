@@ -151,6 +151,10 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
     }
   };
 
+  /**
+   * Retrieves the object from localStorage
+   * @returns {Object} [model or collection]
+   */
   DataStore.prototype.getFromLocalStorage = function( key ) {
     if (typeof key === 'undefined') {
       throw new Error('Key not provided to get from localStorage');
@@ -164,6 +168,9 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
     return data;
   };
 
+  /**
+   * Removes the object from localStorage
+   */
   DataStore.prototype.removeFromLocalStorage = function( key ) {
     try {
       delete window.localStorage[key];

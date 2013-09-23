@@ -6,10 +6,13 @@ instantiate your models/collections if they dont exist in a local cache or local
 and then fetch the data from the server.
 
 ## Install
+You only need the single file located at javascripts/dataStore.js or the minified version. The rest of this
+repo is for tests and a small bit of backbone/requirejs for buid/demo purposes
+
+### Install the demo locally
 ```
-npm install backbone-di
+git clone git@github.com:jamescharlesworth/backbone-di.git
 npm install
-node index.js
 ```
 
 ## Use Case
@@ -26,7 +29,7 @@ The thing is its kind of more complex then that because you usually
 do some checks to see if you already have the model as well as other logic.
 
 
-## A different way
+## A different way ( how to use )
 Instantiate a view
 ```javascript
 define(['jquery','backbone','modules/one/OneViewA'], function( $, Backbone, OneViewA) {

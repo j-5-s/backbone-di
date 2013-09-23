@@ -6,7 +6,7 @@ instantiate your models/collections if they dont exist in a local cache or local
 and then fetch the data from the server.
 
 ## Install
-You only need the single file located at javascripts/dataStore.js or the minified version. The rest of this
+You only need the single file located at public/javascripts/dataStore.js or the minified version. The rest of this
 repo is for tests and a small bit of backbone/requirejs for buid/demo purposes
 
 ### Install the demo locally
@@ -15,7 +15,7 @@ git clone git@github.com:jamescharlesworth/backbone-di.git
 npm install
 node index.js
 ```
-Then goto http://localhost:8080/
+Then go to [localhost](http://localhost:8080/) on port 8080.
 
 ## Use Case
 

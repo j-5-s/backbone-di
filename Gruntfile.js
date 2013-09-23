@@ -2,13 +2,13 @@
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jshint: {
-        files: ['Gruntfile.js','javascripts/**/*.js', 'test/**/*.js'],
+        files: ['Gruntfile.js','public/javascripts/**/*.js', 'test/**/*.js'],
         options: {
             ignores: [
-              'javascripts/vendor/**/*.js',
-              'javascripts/require.js',
-              'javascripts/text.js',
-              'javascripts/*.min.js'
+              'public/javascripts/vendor/**/*.js',
+              'public/javascripts/require.js',
+              'public/javascripts/text.js',
+              'public/javascripts/*.min.js'
               ]
         }
     },
@@ -18,7 +18,7 @@
       },
       my_target: {
         files: {
-          'javascripts/dataStore.min.js': ['javascripts/dataStore.js']
+          'public/javascripts/dataStore.min.js': ['public/javascripts/dataStore.js']
         }
       }
     },
@@ -33,7 +33,7 @@
     },
     watch: {
       scripts: {
-        files: ['javascripts/**/*.js','test/**/*.js'],
+        files: ['public/javascripts/**/*.js','test/**/*.js'],
         tasks: ['jshint', 'uglify'],
         options: {
           spawn: false,

@@ -7,11 +7,10 @@ and then fetch the data from the server.
 
 ## Install
 ```
-git clone git@github.com:jamescharlesworth/backbone-datastore-middleware.git
+npm install backbone-di
 npm install
 node index.js
 ```
-
 
 ## Use Case
 
@@ -96,5 +95,12 @@ events to fire.
   dataStore.events.on('ready', function(){
     console.log('everything that was registered is ready');
   });
+```
+
+## Tests
+Create a few test cases but requires the http node server to be running prior to running karma start.
+```
+node index.js
+karma start
 ```
 

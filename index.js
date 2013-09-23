@@ -3,7 +3,7 @@ var static = require('node-static');
 //
 // Create a node-static server instance to serve the './public' folder
 //
-var file = new static.Server('./public');
+var file = new static.Server('./public', {headers: {"Access-Control-Allow-Origin":"*"}});
 
 require('http').createServer(function (request, response) {
     request.addListener('end', function () {

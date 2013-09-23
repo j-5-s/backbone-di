@@ -5,11 +5,14 @@ for (var file in window.__karma__.files) {
     }
 }
 
-
+//see https://github.com/karma-runner/karma-requirejs/issues/6
+for (var file in window.__karma__.files) {
+  window.__karma__.files[file.replace(/^\//, '')] = window.__karma__.files[file];
+}
 
 requirejs.config({
     // Karma serves files from '/base'
-    baseUrl: '/base/javascripts',
+  baseUrl: 'base/public/javascripts',
 
   "paths": {
     'jquery': 'vendor/jquery-1.10.2.min',

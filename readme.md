@@ -13,7 +13,9 @@ repo is for tests and a small bit of backbone/requirejs for buid/demo purposes
 ```
 git clone git@github.com:jamescharlesworth/backbone-di.git
 npm install
+node index.js
 ```
+Then goto http://localhost:8080/
 
 ## Use Case
 

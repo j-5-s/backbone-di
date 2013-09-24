@@ -45,7 +45,7 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
    */
   DataStore.prototype.getFromLocalStorage = function( key ) {
 
-    if (!this.getFromLocalStorage) {
+    if (!this.useLocalStorage) {
       return {};
     }
 
@@ -117,7 +117,7 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
         //check for data in localStorage to populate with
         var data = self.getFromLocalStorage(collections[i]);
 
-        if (data) {
+        if (_.toArray(data).length) {
           params = data;
         }
         self.cache[collections[i]] = new Arg(params);
@@ -127,7 +127,7 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
         });
         //fetch the data from the database
         (function( obj, name, data ){
-          if (data && !options.reset) {
+          if (_.toArray(data).length && !options.reset) {
             self.events.trigger('ready:'+ name, obj);
             mDfd.resolve();
           } else {

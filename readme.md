@@ -47,8 +47,13 @@ for full example);
 ```javascript
 define(['jquery', 'backbone', 'backbone-di!collections/OneCollection','backbone-di!models/OneModel?id=1'], 
   function( $, Backbone, oneCollection, oneModel ) {
-  //notice in the requirejs define first paramter last argument of the array there is an `id?=1`
+  //notice in the require.js `define` first parameter last argument of the array there is an `id?=1`
   //to grab the instantiate instance of that model.
+
+  //Also, oneCollection is instantiated as well.
+
+  //for this example both objects will call fetch to javascripts/one-collection.json and
+  //javascripts/one-model.json to show how to fetch the data.
 
   var OneViewA = Backbone.View.extend({
     

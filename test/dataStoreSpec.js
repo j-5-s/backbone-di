@@ -1,20 +1,8 @@
-define(['jquery', 'backbone', 'dataStore'], function($, Backbone, dataStore) {
-    describe('load dataStore', function() {
-
-
-      it('register', function() {
-          var completed = false;
-          
-          waitsFor(function(){
-            return completed;
-          });
-
-          dataStore.useLocalStorage = false;
-          dataStore.register(['models/OneModel']).done(function(oneModel){
-            expect(oneModel).toBeDefined();
-            expect(oneModel.get('name')).toEqual('james');
-            completed = true;
-          });
+define(['jquery', 'backbone', 'backbone-di!models/OneModel?id=1'], function($, Backbone, oneModel) {
+    describe('backbone-di', function() {
+      it('loads the dependency', function() {
+          expect(oneModel).toBeDefined();
+          expect(oneModel.get('name')).toEqual('james');
       });
     });
 });

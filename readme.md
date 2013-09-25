@@ -72,6 +72,16 @@ define(['jquery', 'backbone', 'backbone-di!collections/OneCollection','backbone-
 });
 ```
 
+## localStorage option
+You may configure backbone-di to use localStorage for quicker access to data. This is done via 
+requirejs config option `backbonedi.localStorage`:
+require.config({
+  backbonedi: {
+    localStorage: true
+  }
+});
+```
+
 ## Tests
 Create a few test cases but requires the http node server to be running prior to running karma start.
 ```

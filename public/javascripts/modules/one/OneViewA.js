@@ -1,3 +1,9 @@
+// require.config({
+//   backbonedi: {
+//     localStorage: false
+//   }
+// });
+
 define(['jquery',
         'backbone',
         'underscore',

@@ -14,7 +14,7 @@
     //this.events = _.extend({},Backbone.Events);
     this.isReady = false;
     this.cache = {};
-    this.useLocalStorage = true;
+    this.useLocalStorage = false;
   };
 
 
@@ -69,6 +69,9 @@
         originalCollections = collections;
 
     options = options || {};
+
+    this.useLocalStorage = options.localStorage;
+
     if (typeof options.reset === 'undefined') {
       options.reset = false;
     }
@@ -165,6 +168,9 @@
    * to localStorage
    */
   DataStore.prototype.saveToLocalStorage = function( obj ) {
+    if (!this.useLocalStorage) {
+      return;
+    }
     if (typeof obj === 'undefined') {
       try {
         _.each(this.cache, function(modelOrCollection, key){
@@ -220,7 +226,14 @@
 
         req(['jquery', 'backbone', 'underscore'], function($,Backbone, _){
           //req has the same API as require().
-          dataStore.register([name]).done(onload);
+          config.backbonedi = config.backbonedi || {};
+
+          var options = {
+            localStorage: (typeof config.backbonedi.localStorage !== 'undefined') ? config.backbonedi.localStorage : false,
+            reset: false //@todo, update with config option
+          };
+          
+          dataStore.register([name], options).done(onload);
         });
       }
   });

@@ -45,8 +45,10 @@ Figure out the models/collections you want from inside the view (see javascripts
 for full example);
 
 ```javascript
-define(['jquery', 'backbone', 'backbone-di!collections/OneCollection','backbone-di!models/OneModel'], 
+define(['jquery', 'backbone', 'backbone-di!collections/OneCollection','backbone-di!models/OneModel?id=1'], 
   function( $, Backbone, oneCollection, oneModel ) {
+  //notice in the requirejs define first paramter last argument of the array there is an `id?=1`
+  //to grab the instantiate instance of that model.
 
   var OneViewA = Backbone.View.extend({
     

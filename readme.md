@@ -6,8 +6,9 @@ instantiate your models/collections if they dont exist in a local cache or local
 and then fetch the data from the server.
 
 ## Install
-You only need the single file located at public/javascripts/dataStore.js or the minified version. The rest of this
-repo is for tests and a small bit of backbone/requirejs for buid/demo purposes
+You only need the single file located at public/javascripts/backbone-di.js. The rest of this
+repo is for tests and a small bit of backbone/requirejs for buid/demo purposes. Place that file
+in your root requirejs folder (like the text.js plugin).
 
 ### Install the demo locally
 ```

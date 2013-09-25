@@ -12,16 +12,6 @@
               ]
         }
     },
-    uglify: {
-      options: {
-        preserveComments: 'some',
-      },
-      my_target: {
-        files: {
-          'public/javascripts/dataStore.min.js': ['public/javascripts/dataStore.js']
-        }
-      }
-    },
     karma: {
       unit: {
         configFile: 'karma.conf.js',
@@ -42,10 +32,9 @@
     }
   });
   grunt.loadNpmTasks('grunt-karma');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   
-  grunt.registerTask('default', ['jshint', 'uglify']);
+  grunt.registerTask('default', ['jshint']);
   grunt.loadNpmTasks('grunt-contrib-watch');
 
 };

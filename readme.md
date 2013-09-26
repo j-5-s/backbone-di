@@ -76,6 +76,7 @@ define(['jquery', 'backbone', 'backbone-di!collections/OneCollection','backbone-
 ## localStorage option
 You may configure backbone-di to use localStorage for quicker access to data. This is done via 
 requirejs config option `backbonedi.localStorage`:
+```javascript
 require.config({
   backbonedi: {
     localStorage: true

@@ -1,9 +1,10 @@
-#Data Store
+# Backbone DI
 
-It's a dependency injection / IoC middleware for backbone with requirejs. Its a very similar style 
-to requirejs module loading but the exception is that there is a middleware that will 
-instantiate your models/collections if they dont exist in a local cache or localStorage 
-and then fetch the data from the server.
+Backbone DI is a RequireJS plugin for Backbone. It's a dependency injection / IoC middleware
+that will instantiate your models/collections if they don't exist in a local cache or localStorage 
+(optional) and then fetch the data from the server. If they do exist, it will use the existing collections
+and models it has already instantiated.  The goal is to take a lot of the model / collection
+logic out of the views and just provide the objects for you immediately.
 
 ## Install
 You only need the single file located at public/javascripts/backbone-di.js. The rest of this
@@ -32,7 +33,7 @@ The thing is its kind of more complex then that because you usually
 do some checks to see if you already have the model as well as other logic.
 
 
-## A different way ( how to use )
+## A different way (how to use)
 Instantiate a view
 ```javascript
 define(['jquery','backbone','modules/one/OneViewA'], 
@@ -72,6 +73,8 @@ define(['jquery', 'backbone', 'backbone-di!collections/OneCollection','backbone-
   return OneViewA;
 });
 ```
+It's up to you when you want to use this pattern as opposed to passing the model into the view
+directly as its a case by case basis as to what's best.
 
 ## localStorage option
 You may configure backbone-di to use localStorage for quicker access to data. This is done via 

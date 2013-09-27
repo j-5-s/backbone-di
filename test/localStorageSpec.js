@@ -19,11 +19,7 @@ define(['jquery',
 
   describe('fetch oneModel again', function(){
     it('should return the instantiated model', function(){
-      var ls    = window.localStorage,
-          item  = ls.getItem('models/OneModel?id=1'),
-          completed = false;
-      expect(item).toBeDefined();
-      expect(item).toEqual('{"id":"1","name":"james"}');
+      var completed = false;
 
       waitsFor(function(){
         return completed;
@@ -39,17 +35,12 @@ define(['jquery',
 
   describe('oneCollection', function(){
     it('should return a collection with one model', function(){
-      var ls    = window.localStorage,
-          item  = ls.getItem('collections/OneCollection'),
-          completed = false;
+      var completed = false;
 
       waitsFor(function(){
         return completed;
       });
-
-      expect(item).toBeDefined();
-      expect(item).toEqual('[{"name":"james","id":"1"}]');
-        require(['backbone-di!collections/OneCollection'], function(oneCollection2){
+      require(['backbone-di!collections/OneCollection'], function(oneCollection2){
         expect(oneCollection2).toBeDefined();
         expect(oneCollection2.length).toEqual(1);
         completed = true;

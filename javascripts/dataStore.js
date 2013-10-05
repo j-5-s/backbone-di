@@ -1,7 +1,4 @@
-(function () {
-
-
-
+(function(){
 
   var slice = [].slice;
 
@@ -174,56 +171,29 @@
     }
   };
 
-  var dataStore;
-  //dataStore is a singleton
-  if ( typeof window._dataStore === 'undefined') {
-    dataStore = new DataStore();
-    window._dataStore = dataStore;
-  } else {
-    dataStore = window._dataStore;
-  }
 
 
-  // dataStore.events.on('ready', function(){
-  //   dataStore.isReady = true;
-  // });
+  define(['jquery',
+          'backbone',
+          'underscore'
+          ], function( $, Backbone, _ ) {
+
+    var dataStore;
+    debugger;
+    //dataStore is a singleton
+    if ( typeof window._dataStore === 'undefined') {
+      dataStore = new DataStore();
+      window._dataStore = dataStore;
+    } else {
+      dataStore = window._dataStore;
+    }
 
 
-  define({
-      normalize: function( name, normalize ) {
-        console.log(name, normalize)
-        debugger;
-      },
-      load: function (name, req, onload, config) {
-        if (typeof config.paths.jquery === 'undefined') {
-          throw new Error('jQuery is required for backbone-di plugin. specify `jquery` in your require.js config.paths variable');
-        }
+    return dataStore;
+    // dataStore.events.on('ready', function(){
+    //   dataStore.isReady = true;
+    // });
 
-        if (typeof config.paths.backbone === 'undefined') {
-          throw new Error('Backbone is required for backbone-di plugin. specify `backbone` in your require.js config.paths variable');
-        }
-
-        if (typeof config.paths.underscore === 'undefined') {
-          throw new Error('Underscore is required for backbone-di plugin. specify `underscore` in your require.js config.paths variable');
-        }
-        debugger;
-        req(['jquery', 'backbone', 'underscore'], function($,Backbone, _){
-          //req has the same API as require().
-          config.backbonedi = config.backbonedi || {};
-
-          var options = {
-            localStorage: (typeof config.backbonedi.localStorage !== 'undefined') ? config.backbonedi.localStorage : false,
-            reset: false //@todo, update with config option
-          };
-          
-          dataStore.register([name], options).done(onload);
-        });
-      },
-      getDataStore: function(){
-        return dataStore
-      }
   });
 
-
-
-}());
+})();

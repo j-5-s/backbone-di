@@ -1,7 +1,6 @@
 define(['jquery',
         'backbone',
-        'dataStore',
-        'dataStore!models/OneModel:1'
+        'dataStore'
         ], function( $, Backbone, dataStore) {
 
   var OneViewA = Backbone.View.extend({
@@ -9,8 +8,7 @@ define(['jquery',
     initialize: function(options) {
       _.bindAll(this, 'render', 'renderReady');
       var self = this;
-
-      dataStore.getDataStore().register([{'models/OneModel':1}]).done(function( oneModel ){
+      dataStore.register([options.model]).done(function( oneModel ){
         //could get model like this as well now
         //self.model = dataStore.get('models/OneModel?id=1');
         //but its simpler to use it in the parameter callback

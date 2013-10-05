@@ -1,4 +1,7 @@
-define(['jquery', 'backbone'], function( $, Backbone ) {
+(function () {
+
+
+
 
   var slice = [].slice;
 
@@ -12,7 +15,7 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
    *
    */
   var DataStore = function() {
-    this.events = _.extend({},Backbone.Events);
+    //this.events = _.extend({},Backbone.Events);
     this.isReady = false;
     this.cache = {};
   };
@@ -41,18 +44,17 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
     //so remove the ones that do
     var idMap = {};
     _.each(collections, function(name, i) {
-      if (typeof self.cache[name] !== 'undefined') {
-        collections.splice(i,1);
+
+      if (typeof name !== 'string') {
+
+        var key = _.keys(name)[0];
+        idMap[key] = name[key];
+        name = key;
+        collections[i] = name;
       }
 
-
-
-      //check models for id's being passed and remove them if they exist
-      var params = name.split('?');
-      if (params.length > 1) {
-        name = params[0];
-        collections[i] = name;
-        idMap[name] = params[1].substring('3', params[1].length);
+      if (typeof self.cache[name] !== 'undefined') {
+        collections.splice(i,1);
       }
     });
 
@@ -69,7 +71,7 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
           params = {};
           var id = idMap[collections[i]];
           params.id = id;
-          collections[i] += '?id=' + id;
+          collections[i] += ':' + id;
         }
 
         //check for data in localStorage to populate with
@@ -86,11 +88,11 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
         //fetch the data from the database
         (function( obj, name, data ){
           if (data && !options.reset) {
-            self.events.trigger('ready:'+ name, obj);
+           // self.events.trigger('ready:'+ name, obj);
             mDfd.resolve();
           } else {
             obj.fetch().done(function(){
-              self.events.trigger('ready:'+ name, obj);
+           //   self.events.trigger('ready:'+ name, obj);
               mDfd.resolve();
             });
           }
@@ -105,7 +107,7 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
           return self.cache[col];
         });
         dfd.resolve.apply( null, args );
-        self.events.trigger('ready');
+      //  self.events.trigger('ready');
         self.saveToLocalStorage();
       }).fail(function( m ){
         throw new Error('Failed call');
@@ -182,12 +184,46 @@ define(['jquery', 'backbone'], function( $, Backbone ) {
   }
 
 
-  dataStore.events.on('ready', function(){
-    dataStore.isReady = true;
+  // dataStore.events.on('ready', function(){
+  //   dataStore.isReady = true;
+  // });
+
+
+  define({
+      normalize: function( name, normalize ) {
+        console.log(name, normalize)
+        debugger;
+      },
+      load: function (name, req, onload, config) {
+        if (typeof config.paths.jquery === 'undefined') {
+          throw new Error('jQuery is required for backbone-di plugin. specify `jquery` in your require.js config.paths variable');
+        }
+
+        if (typeof config.paths.backbone === 'undefined') {
+          throw new Error('Backbone is required for backbone-di plugin. specify `backbone` in your require.js config.paths variable');
+        }
+
+        if (typeof config.paths.underscore === 'undefined') {
+          throw new Error('Underscore is required for backbone-di plugin. specify `underscore` in your require.js config.paths variable');
+        }
+        debugger;
+        req(['jquery', 'backbone', 'underscore'], function($,Backbone, _){
+          //req has the same API as require().
+          config.backbonedi = config.backbonedi || {};
+
+          var options = {
+            localStorage: (typeof config.backbonedi.localStorage !== 'undefined') ? config.backbonedi.localStorage : false,
+            reset: false //@todo, update with config option
+          };
+          
+          dataStore.register([name], options).done(onload);
+        });
+      },
+      getDataStore: function(){
+        return dataStore
+      }
   });
 
 
-  return dataStore;
 
-
-});
+}());

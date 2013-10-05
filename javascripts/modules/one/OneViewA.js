@@ -1,8 +1,8 @@
 define(['jquery',
         'backbone',
         'dataStore',
-        'collections/OneCollection',
-        'models/OneModel'], function( $, Backbone, dataStore, oneCollection, oneModel ) {
+        'dataStore!models/OneModel:1'
+        ], function( $, Backbone, dataStore) {
 
   var OneViewA = Backbone.View.extend({
     
@@ -10,16 +10,7 @@ define(['jquery',
       _.bindAll(this, 'render', 'renderReady');
       var self = this;
 
-      var contacts = dataStore.request('contacts');
-      var someotherthing data
-
-      contacts.get('name')
-
-      dataStore.on('ready', oneCollection).then(function(){
-
-      })
-      options.model.id = '345345';
-      dataStore.get(options.model).done(function( contacts ){
+      dataStore.getDataStore().register([{'models/OneModel':1}]).done(function( oneModel ){
         //could get model like this as well now
         //self.model = dataStore.get('models/OneModel?id=1');
         //but its simpler to use it in the parameter callback

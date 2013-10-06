@@ -22,6 +22,8 @@ require.config({
   }
 });
 
-require(['app'], function(App){
+require(['app','di'], function(App, di){
+
+    di.useLocalStorage = true; 
     App.start();
 });

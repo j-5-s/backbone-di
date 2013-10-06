@@ -15,6 +15,7 @@
     this.events = _.extend({},Backbone.Events);
     this.isReady = false;
     this.cache = {};
+    this.useLocalStorage = false;
   };
 
 
@@ -154,6 +155,11 @@
    * to localStorage
    */
   DataStore.prototype.saveToLocalStorage = function( obj ) {
+
+    if ( !this.useLocalStorage ) {
+      return;
+    }
+
     if (typeof obj === 'undefined') {
       try {
         _.each(this.cache, function(modelOrCollection, key){
@@ -174,6 +180,11 @@
   };
 
   DataStore.prototype.getFromLocalStorage = function( key ) {
+
+    if ( !this.useLocalStorage ) {
+      return {}
+    }
+
     if (typeof key === 'undefined') {
       throw new Error('Key not provided to get from localStorage');
     }

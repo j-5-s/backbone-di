@@ -1,4 +1,4 @@
-define(['jquery', 'backbone', 'dataStore', 'models/OneModel'], function($, Backbone, dataStore, OneModel) {
+define(['jquery', 'backbone', 'backbone-di', 'models/OneModel'], function($, Backbone, dataStore, OneModel) {
     describe('load dataStore', function() {
 
 

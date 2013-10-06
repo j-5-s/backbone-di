@@ -47,15 +47,8 @@ Figure out the models/collections you want from inside the view (see javascripts
 for full example);
 
 ```javascript
-define(['jquery', 'backbone', 'backbone-di!collections/OneCollection','backbone-di!models/OneModel?id=1'], 
-  function( $, Backbone, oneCollection, oneModel ) {
-  //notice in the require.js `define` first parameter last argument of the array there is an `id?=1`
-  //to grab the instantiate instance of that model.
-
-  //Also, oneCollection is instantiated as well.
-
-  //for this example both objects will call fetch to javascripts/one-collection.json and
-  //javascripts/one-model.json to show how to fetch the data.
+define(['jquery', 'backbone', 'backbone-di'], 
+  function( $, Backbone, dataStore ) {
 
   var OneViewA = Backbone.View.extend({
     
@@ -88,12 +81,7 @@ directly as its a case by case basis as to what's best.
 ## localStorage option
 You may configure backbone-di to use localStorage for quicker access to data. This is done via 
 requirejs config option `backbonedi.localStorage`:
-```javascript
-require.config({
-  backbonedi: {
-    localStorage: true
-  }
-});
+
 ```
 
 ## Tests

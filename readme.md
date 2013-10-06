@@ -82,7 +82,7 @@ directly as its a case by case basis as to what's best.
 You may configure backbone-di to use localStorage for quicker access to data. This is done through
 the useLocalStorage parameter on the `backbone-di` object.
 ```Javascript
-require(['app','di'], function(App, di){
+require(['app','backbone-di'], function(App, di){
     di.useLocalStorage = true; 
     App.start();
 });

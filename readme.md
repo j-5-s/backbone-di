@@ -60,7 +60,20 @@ define(['jquery', 'backbone', 'backbone-di!collections/OneCollection','backbone-
   var OneViewA = Backbone.View.extend({
     
     initialize: function(options) {
+<<<<<<< HEAD
       this.model = oneModel
+=======
+      _.bindAll(this, 'render', 'renderReady');
+      var self = this;
+      dataStore.get(['collections/OneCollection', {'models/OneModel':1}]).done(function( oneCollection, oneModel ){
+        //could get model like this as well now
+        //self.model = dataStore.get('models/OneModel?id=1');
+        //but its simpler to use it in the parameter callback
+        self.model = oneModel;
+        self.model.on('change:name', self.renderReady);
+        self.renderReady();
+      });
+>>>>>>> require-move
     },
     events: {
     },

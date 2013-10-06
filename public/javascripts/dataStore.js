@@ -118,7 +118,12 @@
       $.when.apply($, dfds).done(function(){
         var args = _.map(originalCollections, function(col){
             if (typeof col === 'object') {
-                return self.cache[ col._dataStoreKey ];
+                if (typeof col._dataStoreKey !== 'undefined' ) {
+                  return self.cache[ col._dataStoreKey ];
+                } else {
+                  var key = _.keys(col)[0] + ':' +_.toArray(col)[0];
+                  return self.cache[ key ];
+                }
             }
             return self.cache[col];
         });

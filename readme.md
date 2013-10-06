@@ -39,7 +39,7 @@ define(['jquery', 'backbone', 'dataStore'], function( $, Backbone, dataStore ) {
     initialize: function(options) {
       _.bindAll(this, 'render', 'renderReady');
       var self = this;
-      dataStore.register(['collections/OneCollection', 'models/OneModel?id=1']).done(function( oneCollection, oneModel ){
+      dataStore.get(['collections/OneCollection', {'models/OneModel':1}]).done(function( oneCollection, oneModel ){
         //could get model like this as well now
         //self.model = dataStore.get('models/OneModel?id=1');
         //but its simpler to use it in the parameter callback

@@ -12,7 +12,7 @@
    *
    */
   var DataStore = function() {
-    //this.events = _.extend({},Backbone.Events);
+    this.events = _.extend({},Backbone.Events);
     this.isReady = false;
     this.cache = {};
   };
@@ -20,15 +20,15 @@
 
 
   /**
-   * Registers collections or models
+   * Gets collections or models
    * @param {Array} [collections] - requirejs file paths to grab
    * @returns {Deferred} - jQuery Deferred object loading is complete
-   * @desc a ready event will get trigger when each model has been loaded
+   * @description a ready event will get trigger when each model has been loaded
    * in the following naming convention ready:<file/path>
    * <file/path> being the value passed into the first parameter.
    * loading is complete.
    */
-  DataStore.prototype.register = function( collections, options ) {
+  DataStore.prototype.get = function( collections, options ) {
     var self = this,
         dfd = $.Deferred(),
         originalCollections = collections;
@@ -85,11 +85,11 @@
         //fetch the data from the database
         (function( obj, name, data ){
           if (data && !options.reset) {
-           // self.events.trigger('ready:'+ name, obj);
+            self.events.trigger('ready:'+ name, obj);
             mDfd.resolve();
           } else {
             obj.fetch().done(function(){
-           //   self.events.trigger('ready:'+ name, obj);
+              self.events.trigger('ready:'+ name, obj);
               mDfd.resolve();
             });
           }
@@ -104,7 +104,7 @@
           return self.cache[col];
         });
         dfd.resolve.apply( null, args );
-      //  self.events.trigger('ready');
+        self.events.trigger('ready');
         self.saveToLocalStorage();
       }).fail(function( m ){
         throw new Error('Failed call');
@@ -119,7 +119,7 @@
    * @returns {Mixed} [model or collection]
    * @throws {Error} - if no model/collection is saved in the cache
    */
-  DataStore.prototype.get = function( filepath ) {
+  DataStore.prototype.getFromCache = function( filepath ) {
     if (typeof this.cache[filepath] !== 'undefined') {
        return this.cache[filepath];
     }
@@ -179,7 +179,6 @@
           ], function( $, Backbone, _ ) {
 
     var dataStore;
-    debugger;
     //dataStore is a singleton
     if ( typeof window._dataStore === 'undefined') {
       dataStore = new DataStore();
@@ -189,10 +188,12 @@
     }
 
 
+
+    dataStore.events.on('ready', function(){
+      dataStore.isReady = true;
+    });
+
     return dataStore;
-    // dataStore.events.on('ready', function(){
-    //   dataStore.isReady = true;
-    // });
 
   });
 

@@ -19,5 +19,8 @@
   "devDependencies": {
     "grunt-contrib-jshint": "~0.6.4",
     "grunt-contrib-watch": "~0.5.3"
+  },
+  "dependencies": {
+    "node-static": "~0.7.1"
   }
 }

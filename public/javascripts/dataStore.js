@@ -31,7 +31,7 @@
   DataStore.prototype.get = function( collections, options ) {
     var self = this,
         dfd = $.Deferred(),
-        originalCollections = collections;
+        originalCollections = _.clone(collections);
 
     options = options || {};
     if (typeof options.reset === 'undefined') {
@@ -44,10 +44,26 @@
 
       if (typeof name !== 'string') {
 
-        var key = _.keys(name)[0];
-        idMap[key] = name[key];
-        name = key;
-        collections[i] = name;
+        //see if the sole value is a digit
+        //if so treat the digit as the id
+        if ( _.toArray(name).length === 1 ) {
+          var key = _.keys(name)[0];
+          idMap[key] = name[key];
+          name = key;
+          collections[i] = name;
+        } else {
+          if ( typeof name._dataStoreKey !== 'undefined' ) {
+            self.cache[name._dataStoreKey] = name;
+            name = name._dataStoreKey;
+          } else {
+            var id = _.uniqueId('dataStore_');
+            name._dataStoreKey = id;
+            self.cache[id]  = name;
+            name = id;
+          }
+        }
+
+
       }
 
       if (typeof self.cache[name] !== 'undefined') {
@@ -101,8 +117,12 @@
 
       $.when.apply($, dfds).done(function(){
         var args = _.map(originalCollections, function(col){
-          return self.cache[col];
+            if (typeof col === 'object') {
+                return self.cache[ col._dataStoreKey ];
+            }
+            return self.cache[col];
         });
+        delete originalCollections;
         dfd.resolve.apply( null, args );
         self.events.trigger('ready');
         self.saveToLocalStorage();

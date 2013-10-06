@@ -8,7 +8,8 @@ define(['jquery',
     initialize: function(options) {
       _.bindAll(this, 'render', 'renderReady');
       var self = this;
-      dataStore.get([options.model]).done(function( oneModel ){
+      //options.model.id = 1;
+      dataStore.get([options.model],{reset:true}).done(function( oneModel ){
         //could get model like this as well now
         //self.model = dataStore.get('models/OneModel?id=1');
         //but its simpler to use it in the parameter callback

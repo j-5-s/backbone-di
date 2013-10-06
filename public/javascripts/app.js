@@ -12,6 +12,7 @@ define(['jquery',
 
           var model = {'models/OneModel':1};
           //var model = new OneModel();
+          //model.dataStoreKey = 'models/OneModel';
           
           var oneViewA = new OneViewA({model:model});
           $('#oneViewA').html(oneViewA.render().el);

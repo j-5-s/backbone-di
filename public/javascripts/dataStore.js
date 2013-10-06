@@ -52,20 +52,18 @@
           name = key;
           collections[i] = name;
         } else {
-          if ( typeof name._dataStoreKey !== 'undefined' ) {
-            self.cache[name._dataStoreKey] = name;
-            name = name._dataStoreKey;
+          if ( typeof name.dataStoreKey !== 'undefined' ) {
+            var id = (name.id) ? ':'+name.id : '';
+            name.dataStoreKey = name.dataStoreKey+id
+            self.cache[name.dataStoreKey] = name;
           } else {
             var id = _.uniqueId('dataStore_');
-            name._dataStoreKey = id;
+            name.dataStoreKey = id;
             self.cache[id]  = name;
             name = id;
           }
         }
-
-
       }
-
       if (typeof self.cache[name] !== 'undefined') {
         collections.splice(i,1);
       }
@@ -94,7 +92,7 @@
           params = data;
         }
         self.cache[collections[i]] = new Arg(params);
-        self.cache[collections[i]]._dataStoreKey = collections[i];
+        self.cache[collections[i]].dataStoreKey = collections[i];
         self.cache[collections[i]].on('sync', function(model) {
           self.saveToLocalStorage( model );
         });
@@ -118,8 +116,8 @@
       $.when.apply($, dfds).done(function(){
         var args = _.map(originalCollections, function(col){
             if (typeof col === 'object') {
-                if (typeof col._dataStoreKey !== 'undefined' ) {
-                  return self.cache[ col._dataStoreKey ];
+                if (typeof col.dataStoreKey !== 'undefined' ) {
+                  return self.cache[ col.dataStoreKey ];
                 } else {
                   var key = _.keys(col)[0] + ':' +_.toArray(col)[0];
                   return self.cache[ key ];
@@ -168,7 +166,7 @@
     } else {
       try {
         var strData = JSON.stringify(obj.toJSON());
-        window.localStorage.setItem(obj._dataStoreKey, strData);
+        window.localStorage.setItem(obj.dataStoreKey, strData);
       } catch(e) {
         //local storage is probably not supported
       }

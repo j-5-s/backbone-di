@@ -5,7 +5,8 @@ require.config({
   "paths": {
     'jquery': 'vendor/jquery-1.10.2.min',
     'backbone' : 'vendor/backbone-min',
-    'underscore': 'vendor/underscore-min'
+    'underscore': 'vendor/underscore-min',
+    'di': 'backbone-di'
   },
   shim: {
    'underscore': {

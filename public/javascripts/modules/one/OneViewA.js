@@ -1,6 +1,6 @@
 define(['jquery',
         'backbone',
-        'dataStore'
+        'di'
         ], function( $, Backbone, dataStore) {
 
   var OneViewA = Backbone.View.extend({

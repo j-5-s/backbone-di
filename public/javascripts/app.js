@@ -5,7 +5,8 @@ define(['jquery', 'backbone', 'modules/one/OneViewA'], function( $, Backbone, On
           //is called for within the view itself
           //it may already be in memory, localStorage
           //or if not, it will fetch from the server
-          var oneViewA = new OneViewA();
+          var model = {'models/OneModel':1};
+          var oneViewA = new OneViewA({model:model});
           $('#oneViewA').html(oneViewA.render().el);
         }
     };

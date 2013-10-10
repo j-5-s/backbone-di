@@ -16,8 +16,6 @@ define(['jquery',
         //but its simpler to use it in the parameter callback
         self.collection = taskCollection;
         self.collection.on('add', self.renderTask);
-        debugger;
-        self.collection.test = 'test'
         self.renderReady();
       });
     },
@@ -38,7 +36,7 @@ define(['jquery',
     },
     renderTask: function(m) {
       var taskView = new TaskView({model:m});
-      this.$el.append(taskView.render().el)
+      this.$el.append(taskView.render().el);
     }
   });
 

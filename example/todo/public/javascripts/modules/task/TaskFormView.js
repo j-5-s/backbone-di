@@ -11,7 +11,6 @@ define(['jquery',
       var self = this;
       dataStore.get(['collections/TaskCollection']).done(function( taskCollection ){
         self.collection = taskCollection;
-        self.collection.test2 = 'test2'
         self.renderReady();
       });
 

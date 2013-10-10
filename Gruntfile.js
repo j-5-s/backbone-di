@@ -2,13 +2,20 @@
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jshint: {
-        files: ['Gruntfile.js','public/javascripts/**/*.js', 'test/**/*.js'],
+        files: [
+          'Gruntfile.js',
+          'public/javascripts/**/*.js',
+          'example/todo/**/*.js',
+          'test/**/*.js'
+        ],
         options: {
             ignores: [
               'public/javascripts/vendor/**/*.js',
-              'public/javascripts/require.js',
-              'public/javascripts/text.js',
-              'public/javascripts/*.min.js'
+              'example/todo/public/javascripts/vendor/**/*.js',
+              '**/require.js',
+              '**/text.js',
+              '**/*.min.js'
+
               ]
         }
     },
@@ -23,7 +30,12 @@
     },
     watch: {
       scripts: {
-        files: ['public/javascripts/**/*.js','test/**/*.js', 'backbone-di.js'],
+        files: [
+          'public/javascripts/**/*.js',
+          'example/todo/**/*.js',
+          'test/**/*.js',
+          'backbone-di.js'
+        ],
         tasks: ['jshint', 'shell'],
         options: {
           spawn: false,

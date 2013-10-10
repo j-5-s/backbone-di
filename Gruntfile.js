@@ -23,8 +23,8 @@
     },
     watch: {
       scripts: {
-        files: ['public/javascripts/**/*.js','test/**/*.js'],
-        tasks: ['jshint', 'uglify'],
+        files: ['public/javascripts/**/*.js','test/**/*.js', 'backbone-di.js'],
+        tasks: ['jshint', 'shell'],
         options: {
           spawn: false,
         },

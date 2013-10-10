@@ -19,7 +19,6 @@
   };
 
 
-
   /**
    * Gets collections or models
    * @param {Array} [collections] - requirejs file paths to grab
@@ -54,12 +53,13 @@
             name = key;
             collections[i] = name;
           } else {
+            var id;
             if ( typeof name.dataStoreKey !== 'undefined' ) {
-              var id = (name.id) ? ':'+name.id : '';
-              name.dataStoreKey = name.dataStoreKey+id
+              id = (name.id) ? ':'+name.id : '';
+              name.dataStoreKey = name.dataStoreKey+id;
               self.cache[name.dataStoreKey] = name;
             } else {
-              var id = _.uniqueId('dataStore_');
+              id = _.uniqueId('dataStore_');
               name.dataStoreKey = id;
               self.cache[id]  = name;
               name = id;
@@ -80,7 +80,7 @@
         _.each(args, function(Arg, i){
 
           //check again for cache
-          //because of async nature of requirejs, 
+          //because of async nature of requirejs,
           //model/collection could now be in cache
           if (typeof self.cache[collections[i]] !== 'undefined') {
             if ( typeof idMap[collections[i]] === 'undefined') {
@@ -126,7 +126,6 @@
         });
     
         $.when.apply($, dfds).done(function(){
-          debugger;
           var args = _.map(originalCollections, function(col){
               if (typeof col === 'object') {
                   if (typeof col.dataStoreKey !== 'undefined' ) {
@@ -192,10 +191,11 @@
     }
   };
 
+
   DataStore.prototype.getFromLocalStorage = function( key ) {
 
     if ( !this.useLocalStorage ) {
-      return {}
+      return {};
     }
 
     if (typeof key === 'undefined') {
@@ -244,4 +244,4 @@
 
   });
 
-})();
+}());

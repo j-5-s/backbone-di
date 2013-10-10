@@ -3,7 +3,7 @@ define(['jquery', 'backbone', 'backbone-di', 'models/OneModel'], function($, Bac
 
 
       it('gets through string', function() {
-          var completed = false
+          var completed = false;
           waitsFor( function(){
             if (a && b && c && d) {
               completed = true;
@@ -29,7 +29,7 @@ define(['jquery', 'backbone', 'backbone-di', 'models/OneModel'], function($, Bac
           dataStore.get([{'models/OneModel':1}],{reset:true}).done(function(oneModel2){
             expect(oneModel2).toBeDefined();
             expect(oneModel2.get('name')).toEqual('james');
-            b = true
+            b = true;
           });
 
           var oneModel3 = new OneModel();

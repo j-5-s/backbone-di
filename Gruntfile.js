@@ -29,12 +29,20 @@
           spawn: false,
         },
       }
+    },
+    shell: {
+        cpBackboneDi: {
+            command: 'cp backbone-di.js example/todo/public/javascripts && cp backbone-di.js public/javascripts'
+        }
     }
   });
+
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  
-  grunt.registerTask('default', ['jshint']);
+  grunt.loadNpmTasks('grunt-shell');
+
+
+  grunt.registerTask('default', ['jshint', 'shell']);
   grunt.loadNpmTasks('grunt-contrib-watch');
 
 };

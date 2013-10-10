@@ -18,12 +18,13 @@ define(['jquery', 'backbone', 'backbone-di', 'models/OneModel'], function($, Bac
              // throw new Error('asdf')
               expect(oneModel.get('name')).toEqual('james');
               a = true;
+
             });
           //});
 
-          waitsFor( function(){
-            return completed;
-          },'getString never completed', 10000);
+          // waitsFor( function(){
+          //   return completed;
+          // },'getString never completed', 10000);
 
           dataStore.get([{'models/OneModel':1}],{reset:true}).done(function(oneModel2){
             expect(oneModel2).toBeDefined();

@@ -42,9 +42,8 @@
       if (typeof options.reset === 'undefined') {
         options.reset = false;
       }
-      //only add the collections that don't exist
-      //so remove the ones that do
-      
+
+
       /**
        * Determines if the object is a backbone object
        * really poorly done right now. @todo, refactor
@@ -59,6 +58,20 @@
         }
 
         if ( _.toArray(obj).length > 1 ) {
+          return true;
+        }
+
+        return false;
+      };
+
+      /**
+       * Checks to see if an object is a collection
+       * by looking for models attribute
+       * @param {Object} obj
+       * @returns {Boolean}
+       */
+      var isCollection = function( obj ) {
+        if ( typeof obj.models !== 'undefined' ) {
           return true;
         }
 
@@ -137,14 +150,15 @@
           //check again for cache
           //because of async nature of requirejs,
           //model/collection could now be in cache
+
           if (typeof self.cache[entities[i]] !== 'undefined') {
             if ( typeof idMap[entities[i]] === 'undefined') {
               return;
             }
           }
-          //explain
 
-          var mDfd = $.Deferred();
+
+          var entityDfd = $.Deferred();
           var params;
           if (typeof idMap[entities[i]] !== 'undefined') {
             params = {};
@@ -162,32 +176,44 @@
 
           self.cache[entities[i]] = new Arg(params);
           self.cache[entities[i]].dataStoreKey = entities[i];
-          //name entity
+
           //need a flag to unbind
-          self.cache[entities[i]].on('sync', function(model) {
-            //look to see if it gets called by fetch
-            self.saveToLocalStorage( model );
-          });
+          if ( isCollection( self.cache[entities[i]] ) ) {
+            self.cache[entities[i]].each(function(m){
+              m.on('sync', function(model) {
+                //look to see if it gets called by fetch
+                self.saveToLocalStorage( model );
+              });
+            });
+
+            self.cache[entities[i]].on('all', function( model ){
+              self.saveToLocalStorage( model );
+            });
+          }
+
 
           //fetch the data from the database
+          //needs to be wrapped in function because
+          //object, name, and data are used after fetch
+          //is called.
           (function( obj, name, data ){
             //
             if (data && !options.reset) {
               self.events.trigger('ready:'+ name, obj);
-              mDfd.resolve();
+              entityDfd.resolve();
             } else {
               //may want to fetch and reset collection
               //think about design on how to do that
               //and other fetch options
               obj.fetch().done(function(){
                 self.events.trigger('ready:'+ name, obj);
-                mDfd.resolve();
+                entityDfd.resolve();
               });
             }
 
           }(self.cache[entities[i]],entities[i],data));
 
-          dfds.push(mDfd);
+          dfds.push(entityDfd);
         });
 
         $.when.apply($, dfds).done(function(){
@@ -206,14 +232,13 @@
           dfd.resolve.apply( null, args );
           self.events.trigger('ready');
           //entity could have been fetch from the server
-          self.saveToLocalStorage();
+          //self.saveToLocalStorage();
         }).fail(function( m ){
           throw new Error('Failed call');
         });
       });
 
     return dfd.promise();
-
   };
 
   /**

@@ -74,7 +74,17 @@
         if ( typeof obj.models !== 'undefined' ) {
           return true;
         }
+        return false;
+      };
 
+      /**
+       * Checks if the object is a Backbone Model
+       * by looking for attributes property array
+       */
+      var isModel = function( obj ) {
+        if ( typeof obj.attributes !== 'undefined' ) {
+          return true;
+        }
         return false;
       };
 
@@ -189,6 +199,8 @@
             self.cache[entities[i]].on('all', function( model ){
               self.saveToLocalStorage( model );
             });
+          } else if ( isModel( self.cache[entities[i]] ) ) {
+            self.saveToLocalStorage( self.cache[entities[i]] );
           }
 
 

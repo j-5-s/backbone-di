@@ -9,7 +9,7 @@ define(['jquery',
     initialize: function(options) {
       _.bindAll(this, 'render', 'addTask');
       var self = this;
-      dataStore.get(['collections/TaskCollection']).done(function( taskCollection ){
+      dataStore.lookup(['collections/TaskCollection']).done(function( taskCollection ){
         self.collection = taskCollection;
         self.renderReady();
       });

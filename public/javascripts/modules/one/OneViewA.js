@@ -9,9 +9,9 @@ define(['jquery',
       _.bindAll(this, 'render', 'renderReady');
       var self = this;
       //options.model.id = 1;
-      dataStore.get([options.model],{reset:true}).done(function( oneModel ){
+      dataStore.lookup([options.model],{reset:true}).done(function( oneModel ){
         //could get model like this as well now
-        //self.model = dataStore.get('models/OneModel?id=1');
+        //self.model = dataStore.lookup('models/OneModel?id=1');
         //but its simpler to use it in the parameter callback
         self.model = oneModel;
         self.model.on('change:name', self.renderReady);

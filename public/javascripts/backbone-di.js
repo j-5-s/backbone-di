@@ -20,18 +20,22 @@
 
 
   /**
-   * Gets collections or models
-   * @param {Array} [collections] - requirejs file paths to grab
+   * Gets entities (collections or models)
+   * @param {Array} [entities] - requirejs file paths to grab
    * @returns {Deferred} - jQuery Deferred object loading is complete
    * @description a ready event will get trigger when each model has been loaded
    * in the following naming convention ready:<file/path>
    * <file/path> being the value passed into the first parameter.
    * loading is complete.
    */
-  DataStore.prototype.get = function( collections, options ) {
+   //use entities rather than collections
+   //.lookup rather than get
+   //use urlRool for storage key
+   //
+  DataStore.prototype.lookup = function( entities, options ) {
     var self = this,
         dfd = $.Deferred(),
-        originalCollections = _.clone(collections),
+        originalEntities = _.clone( entities ),
         idMap = {};
 
       options = options || {};
@@ -41,19 +45,43 @@
       //only add the collections that don't exist
       //so remove the ones that do
       
-      _.each(collections, function(name, i) {
+      /**
+       * Determines if the object is a backbone object
+       * really poorly done right now. @todo, refactor
+       * @param {Object} - obj
+       * @returns {Boolean}
+       */
+      var isBackboneObject = function( obj ) {
 
-        if (typeof name !== 'string') {
+        //this method should only be called on objects
+        if (typeof obj === 'string' ) {
+          throw new Error('strings are not backbone objects');
+        }
 
-          //see if the sole value is a digit
-          //if so treat the digit as the id
-          if ( _.toArray(name).length === 1 ) {
-            var key = _.keys(name)[0];
-            idMap[key] = name[key];
-            name = key;
-            collections[i] = name;
-          } else {
+        if ( _.toArray(obj).length > 1 ) {
+          return true;
+        }
+
+        return false;
+      };
+
+      /**
+       * Removes Backbone objects from the `entities`
+       * array passed into `lookup`. As well as removing
+       * the object, it stores it on `this.cache` using
+       * either the `dataStoreKey` or a random key
+       *
+       * @todo refactor keys to use something more dynamic
+       * @param {Mixed} name - string or object to store
+       *   if its a string it ignores it.
+       * @param {Integer} i - the current index of the loop
+       */
+      var removeBackboneObjectFromEntity = function( name, i ) {
+        if ( typeof name === 'object' ) {
+          if ( isBackboneObject( name ) ) {
             var id;
+            //if the dataStoreKey is set, use it. otherwise
+            //create a random key for the cache id
             if ( typeof name.dataStoreKey !== 'undefined' ) {
               id = (name.id) ? ':'+name.id : '';
               name.dataStoreKey = name.dataStoreKey+id;
@@ -62,89 +90,128 @@
               id = _.uniqueId('dataStore_');
               name.dataStoreKey = id;
               self.cache[id]  = name;
-              name = id;
             }
+            entities.splice(i,1);
           }
         }
-        if (typeof self.cache[name] !== 'undefined') {
-          collections.splice(i,1);
-        }
-      });
+      };
 
-      
+      /**
+       * This cb function will take the entity passed
+       * into `lookup` and transform the strings in
+       * the entities array to their requirejs paths
+       * the lookup function is dynamic and can take
+       *  * The requirejs string
+       *  * An object like `{'models/OneModel':1}` - 1 being the id
+       *  * A backbone model or collection
+       * @param {Mixed} name - string or object to normalize
+       * @param {Integer} i - the current index of the loop
+       */
+      var normalizeEntityToRequireJSPath = function( name, i ) {
+        if ( typeof name === 'object' ) {
+
+          //name is an object
+          //either a {kev:value} with require path
+          //and id such as {'models/ModelName': 1}
+          //or its an actual backbone object
+          if ( !isBackboneObject(name) ) {
+            var key = _.keys(name)[0];
+            idMap[key] = name[key];
+            name = key;
+            entities[i] = name;
+          }
+        }
+      };
+
+
+      _.each( entities, removeBackboneObjectFromEntity );
+      _.each( entities, normalizeEntityToRequireJSPath );
+
       //instantiate the new models
-      require(collections, function(){
+      require(entities, function(){
         var args = slice.call(arguments);
         var dfds = [];
 
-        _.each(args, function(Arg, i){
+        _.each( args, function(Arg, i){
 
           //check again for cache
           //because of async nature of requirejs,
           //model/collection could now be in cache
-          if (typeof self.cache[collections[i]] !== 'undefined') {
-            if ( typeof idMap[collections[i]] === 'undefined') {
+          if (typeof self.cache[entities[i]] !== 'undefined') {
+            if ( typeof idMap[entities[i]] === 'undefined') {
               return;
             }
           }
+          //explain
 
           var mDfd = $.Deferred();
           var params;
-          if (typeof idMap[collections[i]] !== 'undefined') {
+          if (typeof idMap[entities[i]] !== 'undefined') {
             params = {};
-            var id = idMap[collections[i]];
+            var id = idMap[entities[i]];
             params.id = id;
-            collections[i] += ':' + id;
+            entities[i] += ':' + id;
           }
 
           //check for data in localStorage to populate with
-          var data = self.getFromLocalStorage(collections[i]);
+          var data = self.getFromLocalStorage( entities[i] );
 
           if (data) {
             params = data;
           }
-          self.cache[collections[i]] = new Arg(params);
-          self.cache[collections[i]].dataStoreKey = collections[i];
-          self.cache[collections[i]].on('sync', function(model) {
+
+          self.cache[entities[i]] = new Arg(params);
+          self.cache[entities[i]].dataStoreKey = entities[i];
+          //name entity
+          //need a flag to unbind
+          self.cache[entities[i]].on('sync', function(model) {
+            //look to see if it gets called by fetch
             self.saveToLocalStorage( model );
           });
+
           //fetch the data from the database
           (function( obj, name, data ){
+            //
             if (data && !options.reset) {
               self.events.trigger('ready:'+ name, obj);
               mDfd.resolve();
             } else {
+              //may want to fetch and reset collection
+              //think about design on how to do that
+              //and other fetch options
               obj.fetch().done(function(){
                 self.events.trigger('ready:'+ name, obj);
                 mDfd.resolve();
               });
             }
 
-          }(self.cache[collections[i]],collections[i],data));
+          }(self.cache[entities[i]],entities[i],data));
 
           dfds.push(mDfd);
         });
-    
+
         $.when.apply($, dfds).done(function(){
-          var args = _.map(originalCollections, function(col){
-              if (typeof col === 'object') {
-                  if (typeof col.dataStoreKey !== 'undefined' ) {
-                    return self.cache[ col.dataStoreKey ];
+          var args = _.map(originalEntities, function(entity){
+              if (typeof entity === 'object') {
+                  if (typeof entity.dataStoreKey !== 'undefined' ) {
+                    return self.cache[ entity.dataStoreKey ];
                   } else {
-                    var key = _.keys(col)[0] + ':' +_.toArray(col)[0];
+                    var key = _.keys( entity )[0] + ':' +_.toArray( entity )[0];
                     return self.cache[ key ];
                   }
               }
-              return self.cache[col];
+              return self.cache[entity];
           });
           //delete originalCollections;
           dfd.resolve.apply( null, args );
           self.events.trigger('ready');
+          //entity could have been fetch from the server
           self.saveToLocalStorage();
         }).fail(function( m ){
           throw new Error('Failed call');
         });
       });
+
     return dfd.promise();
 
   };
@@ -191,7 +258,8 @@
     }
   };
 
-
+  //do localStorage per
+  //flag individual models/collections
   DataStore.prototype.getFromLocalStorage = function( key ) {
 
     if ( !this.useLocalStorage ) {
@@ -219,6 +287,11 @@
   };
 
 
+  //Backbone.$
+  //for deferred
+  //look at local storage
+  //marionette page 219 (gentle introduction)
+  //app.dataStore - mixin
 
   define(['jquery',
           'backbone',

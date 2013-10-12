@@ -13,7 +13,7 @@ define(['jquery', 'backbone', 'backbone-di', 'models/OneModel'], function($, Bac
           //runs( function(){
             var a, b, c, d;
 
-            dataStore.get(['models/OneModel'],{reset:true}).done(function(oneModel){
+            dataStore.lookup(['models/OneModel'],{reset:true}).done(function(oneModel){
               expect(oneModel).toBeDefined();
              // throw new Error('asdf')
               expect(oneModel.get('name')).toEqual('james');
@@ -26,14 +26,14 @@ define(['jquery', 'backbone', 'backbone-di', 'models/OneModel'], function($, Bac
           //   return completed;
           // },'getString never completed', 10000);
 
-          dataStore.get([{'models/OneModel':1}],{reset:true}).done(function(oneModel2){
+          dataStore.lookup([{'models/OneModel':1}],{reset:true}).done(function(oneModel2){
             expect(oneModel2).toBeDefined();
             expect(oneModel2.get('name')).toEqual('james');
             b = true;
           });
 
           var oneModel3 = new OneModel();
-          dataStore.get([oneModel3],{reset:true}).done(function(oneModel3){
+          dataStore.lookup([oneModel3],{reset:true}).done(function(oneModel3){
             expect(oneModel3).toBeDefined();
             expect(oneModel3.get('name')).toEqual('ModelOne');
             c = true;
@@ -42,7 +42,7 @@ define(['jquery', 'backbone', 'backbone-di', 'models/OneModel'], function($, Bac
           var oneModel4 = new OneModel();
           oneModel4.dataStoreKey = 'models/OneModel';
           oneModel4.id = 3;
-          dataStore.get([oneModel4],{reset:true}).done(function(oneModel3){
+          dataStore.lookup([oneModel4],{reset:true}).done(function(oneModel3){
             expect(oneModel4).toBeDefined();
             expect(oneModel4.get('name')).toEqual('ModelOne');
             d = true;

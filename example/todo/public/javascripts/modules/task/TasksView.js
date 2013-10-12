@@ -10,9 +10,9 @@ define(['jquery',
       _.bindAll(this, 'render', 'renderReady', 'renderTask');
       var self = this;
       //options.model.id = 1;
-      dataStore.get(['collections/TaskCollection']).done(function( taskCollection ){
+      dataStore.lookup(['collections/TaskCollection']).done(function( taskCollection ){
         //could get model like this as well now
-        //self.model = dataStore.get('models/OneModel?id=1');
+        //self.model = dataStore.lookup('models/OneModel?id=1');
         //but its simpler to use it in the parameter callback
         self.collection = taskCollection;
         self.collection.on('add', self.renderTask);

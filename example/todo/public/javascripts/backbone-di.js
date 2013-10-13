@@ -74,7 +74,17 @@
         if ( typeof obj.models !== 'undefined' ) {
           return true;
         }
+        return false;
+      };
 
+      /**
+       * Checks if the object is a Backbone Model
+       * by looking for attributes property array
+       */
+      var isModel = function( obj ) {
+        if ( typeof obj.attributes !== 'undefined' ) {
+          return true;
+        }
         return false;
       };
 
@@ -189,6 +199,8 @@
             self.cache[entities[i]].on('all', function( model ){
               self.saveToLocalStorage( model );
             });
+          } else if ( isModel( self.cache[entities[i]] ) ) {
+            self.saveToLocalStorage( self.cache[entities[i]] );
           }
 
 
@@ -318,28 +330,18 @@
   //marionette page 219 (gentle introduction)
   //app.dataStore - mixin
 
-  define(['jquery',
-          'backbone',
-          'underscore'
-          ], function( $, Backbone, _ ) {
 
-    var dataStore;
-    //dataStore is a singleton
-    if ( typeof window._dataStore === 'undefined') {
-      dataStore = new DataStore();
-      window._dataStore = dataStore;
-    } else {
-      dataStore = window._dataStore;
-    }
+  var dataStore;
+  //dataStore is a singleton
+  if ( typeof Backbone.dataStore === 'undefined') {
+    dataStore = new DataStore();
+    Backbone.dataStore = dataStore;
+  } 
 
 
 
-    dataStore.events.on('ready', function(){
-      dataStore.isReady = true;
-    });
-
-    return dataStore;
-
+  dataStore.events.on('ready', function(){
+    dataStore.isReady = true;
   });
 
 }());

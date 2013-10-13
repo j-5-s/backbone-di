@@ -48,14 +48,14 @@ for full example);
 
 ```javascript
 define(['jquery', 'backbone', 'backbone-di'], 
-  function( $, Backbone, dataStore ) {
+  function( $, Backbone ) {
 
   var OneViewA = Backbone.View.extend({
     
     initialize: function(options) {
       _.bindAll(this, 'render', 'renderReady');
       var self = this;
-      dataStore.get(['collections/OneCollection', {'models/OneModel':1}]).done(function( oneCollection, oneModel ){
+      Backbone.dataStore.lookup(['collections/OneCollection', {'models/OneModel':1}]).done(function( oneCollection, oneModel ){
         //could get model like this as well now
         //self.model = dataStore.get('models/OneModel?id=1');
         //but its simpler to use it in the parameter callback
@@ -82,8 +82,8 @@ directly as its a case by case basis as to what's best.
 You may configure backbone-di to use localStorage for quicker access to data. This is done through
 the useLocalStorage parameter on the `backbone-di` object.
 ```Javascript
-require(['app','backbone-di'], function(App, di){
-    di.useLocalStorage = true; 
+require(['app', 'backbone', 'backbone-di'], function(App, Backbone){
+    Backbone.dataStore.useLocalStorage = true; 
     App.start();
 });
 ```

@@ -1,15 +1,14 @@
 define(['jquery',
         'backbone',
-        'di',
         'text!modules/task/taskForm.html'
-        ], function( $, Backbone, dataStore, taskFormHtml) {
+        ], function( $, Backbone, taskFormHtml) {
 
   var OneViewA = Backbone.View.extend({
     
     initialize: function(options) {
       _.bindAll(this, 'render', 'addTask');
       var self = this;
-      dataStore.lookup(['collections/TaskCollection']).done(function( taskCollection ){
+      Backbone.dataStore.lookup(['collections/TaskCollection']).done(function( taskCollection ){
         self.collection = taskCollection;
         self.renderReady();
       });

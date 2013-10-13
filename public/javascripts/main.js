@@ -18,12 +18,15 @@ require.config({
           "jquery"
         ],
         "exports": "Backbone"
+      },
+      "di": {
+        "deps": ["backbone", "underscore"]
       }
   }
 });
 
-require(['app','di'], function(App, di){
+require(['app','backbone','di'], function(App, Backbone){
 
-    di.useLocalStorage = true; 
+    Backbone.dataStore.useLocalStorage = true; 
     App.start();
 });

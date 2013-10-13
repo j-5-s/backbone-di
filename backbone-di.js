@@ -330,28 +330,18 @@
   //marionette page 219 (gentle introduction)
   //app.dataStore - mixin
 
-  define(['jquery',
-          'backbone',
-          'underscore'
-          ], function( $, Backbone, _ ) {
 
-    var dataStore;
-    //dataStore is a singleton
-    if ( typeof window._dataStore === 'undefined') {
-      dataStore = new DataStore();
-      window._dataStore = dataStore;
-    } else {
-      dataStore = window._dataStore;
-    }
+  var dataStore;
+  //dataStore is a singleton
+  if ( typeof Backbone.dataStore === 'undefined') {
+    dataStore = new DataStore();
+    Backbone.dataStore = dataStore;
+  } 
 
 
 
-    dataStore.events.on('ready', function(){
-      dataStore.isReady = true;
-    });
-
-    return dataStore;
-
+  dataStore.events.on('ready', function(){
+    dataStore.isReady = true;
   });
 
 }());

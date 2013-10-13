@@ -28,7 +28,7 @@
   }
 }(this, function (_, Backbone, root, undef) {
 
-  if ( Backbone.dataStore !==  undef) {
+  if ( Backbone.dataStore !==  undef ) {
     return;
   }
 
@@ -228,8 +228,11 @@
               });
             });
 
-            self.cache[entities[i]].on('all', function( model ){
-              self.saveToLocalStorage( model );
+            self.cache[entities[i]].on('add', function( model ){
+              self.saveToLocalStorage( model.collection );
+            });
+            self.cache[entities[i]].on('remove', function( model ){
+              self.saveToLocalStorage( model.collection );
             });
           } else if ( isModel( self.cache[entities[i]] ) ) {
             self.saveToLocalStorage( self.cache[entities[i]] );

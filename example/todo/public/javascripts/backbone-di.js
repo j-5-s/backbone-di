@@ -28,9 +28,6 @@
   }
 }(this, function (_, Backbone, root, undef) {
 
-  if ( Backbone.dataStore !==  undef ) {
-    return;
-  }
 
   var slice = [].slice;
 
@@ -194,7 +191,7 @@
           //model/collection could now be in cache
 
           if ( self.cache[entities[i]] !== undef) {
-            if ( typeof idMap[entities[i]] === undef) {
+            if ( idMap[entities[i]] === undef ) {
               return;
             }
           }

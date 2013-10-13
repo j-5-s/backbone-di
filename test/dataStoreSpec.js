@@ -5,7 +5,7 @@ define(['jquery', 'backbone', 'models/OneModel', 'backbone-di'], function($, Bac
       it('gets through string', function() {
           var completed = false;
           waitsFor( function(){
-            if (a && b && c && d) {
+            if ( a && b && c && d ) {
               completed = true;
             }
             return completed;

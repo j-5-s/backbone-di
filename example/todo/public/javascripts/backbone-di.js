@@ -1,4 +1,36 @@
-(function(){
+//
+//  Backbone-di.js 0.0.3
+//
+//  (c) 2013 James Charlesworth
+//  Backbone-di may be freely distributed under the MIT license.
+//  For all details and documentation:
+//  https://github.com/jamescharlesworth/backbone-di/
+//
+
+(function( root, factory, undef ){
+  'use strict';
+  if (typeof exports === 'object') {
+      // Node. Does not work with strict CommonJS, but
+      // only CommonJS-like enviroments that support module.exports,
+      // like Node.
+      module.exports = factory(require('underscore'), require('Backbone'));
+  } else if (typeof define === 'function' && define.amd) {
+      // AMD. Register as an anonymous module.
+      define(['underscore', 'backbone'], function (_, Backbone) {
+          // Check if we use the AMD branch of Back
+          _ = _ === undef ? root._ : _;
+          Backbone = Backbone === undef ? root.Backbone : Backbone;
+          return (root.returnExportsGlobal = factory(_, Backbone, root));
+      });
+  } else {
+      // Browser globals
+      root.returnExportsGlobal = factory(root._, root.Backbone);
+  }
+}(this, function (_, Backbone, root, undef) {
+
+  if ( Backbone.dataStore !==  undef) {
+    return;
+  }
 
   var slice = [].slice;
 
@@ -39,7 +71,7 @@
         idMap = {};
 
       options = options || {};
-      if (typeof options.reset === 'undefined') {
+      if ( options.reset === undef ) {
         options.reset = false;
       }
 
@@ -82,7 +114,7 @@
        * by looking for attributes property array
        */
       var isModel = function( obj ) {
-        if ( typeof obj.attributes !== 'undefined' ) {
+        if ( obj.attributes !== undef) {
           return true;
         }
         return false;
@@ -161,8 +193,8 @@
           //because of async nature of requirejs,
           //model/collection could now be in cache
 
-          if (typeof self.cache[entities[i]] !== 'undefined') {
-            if ( typeof idMap[entities[i]] === 'undefined') {
+          if ( self.cache[entities[i]] !== undef) {
+            if ( typeof idMap[entities[i]] === undef) {
               return;
             }
           }
@@ -170,7 +202,7 @@
 
           var entityDfd = $.Deferred();
           var params;
-          if (typeof idMap[entities[i]] !== 'undefined') {
+          if ( idMap[entities[i]] !== undef ) {
             params = {};
             var id = idMap[entities[i]];
             params.id = id;
@@ -260,7 +292,7 @@
    * @throws {Error} - if no model/collection is saved in the cache
    */
   DataStore.prototype.getFromCache = function( filepath ) {
-    if (typeof this.cache[filepath] !== 'undefined') {
+    if ( this.cache[filepath] !== undef ) {
        return this.cache[filepath];
     }
     throw new Error ( filepath + " is not defined." );
@@ -276,11 +308,11 @@
       return;
     }
 
-    if (typeof obj === 'undefined') {
+    if ( obj === undef ) {
       try {
         _.each(this.cache, function(modelOrCollection, key){
           var strData = JSON.stringify(modelOrCollection.toJSON());
-          window.localStorage.setItem(key, strData);
+          root.localStorage.setItem(key, strData);
         });
       } catch(e) {
         //local storage is probably not supported
@@ -288,7 +320,7 @@
     } else {
       try {
         var strData = JSON.stringify(obj.toJSON());
-        window.localStorage.setItem(obj.dataStoreKey, strData);
+        root.localStorage.setItem(obj.dataStoreKey, strData);
       } catch(e) {
         //local storage is probably not supported
       }
@@ -303,12 +335,12 @@
       return {};
     }
 
-    if (typeof key === 'undefined') {
+    if ( key === undef ) {
       throw new Error('Key not provided to get from localStorage');
     }
     var data;
     try {
-      data = JSON.parse(window.localStorage.getItem(key));
+      data = JSON.parse(root.localStorage.getItem(key));
     } catch(e) {
       //localStorage likely not supported
     }
@@ -317,7 +349,7 @@
 
   DataStore.prototype.removeFromLocalStorage = function( key ) {
     try {
-      delete window.localStorage[key];
+      delete root.localStorage[key];
     } catch(e) {
       //silence
     }
@@ -330,18 +362,15 @@
   //marionette page 219 (gentle introduction)
   //app.dataStore - mixin
 
-
   var dataStore;
   //dataStore is a singleton
-  if ( typeof Backbone.dataStore === 'undefined') {
+  if ( Backbone.dataStore === undef ) {
     dataStore = new DataStore();
     Backbone.dataStore = dataStore;
-  } 
-
-
+  }
 
   dataStore.events.on('ready', function(){
     dataStore.isReady = true;
   });
 
-}());
+}));

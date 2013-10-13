@@ -36,7 +36,7 @@
           'test/**/*.js',
           'backbone-di.js'
         ],
-        tasks: ['jshint', 'shell'],
+        tasks: ['shell'],
         options: {
           spawn: false,
         },

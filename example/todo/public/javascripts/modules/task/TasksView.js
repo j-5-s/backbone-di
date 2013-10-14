@@ -14,8 +14,6 @@ define(['jquery',
         //self.model = dataStore.lookup('models/OneModel?id=1');
         //but its simpler to use it in the parameter callback
         self.collection = taskCollection;
-        self.collection.test2 = 'test2'
-        debugger;
         self.collection.on('add', self.renderTask);
         self.renderReady();
       });

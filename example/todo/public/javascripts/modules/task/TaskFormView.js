@@ -10,8 +10,6 @@ define(['jquery',
       var self = this;
       Backbone.dataStore.lookup(['collections/TaskCollection']).done(function( taskCollection ){
         self.collection = taskCollection;
-        self.collection.test = 'tes';
-        debugger;
         self.renderReady();
       });
 

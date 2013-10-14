@@ -57,10 +57,7 @@
    * <file/path> being the value passed into the first parameter.
    * loading is complete.
    */
-   //use entities rather than collections
-   //.lookup rather than get
-   //use urlRool for storage key
-   //
+   //use `urlRool` for storage key
   DataStore.prototype.lookup = function( entities, options ) {
     var self = this,
         dfd = $.Deferred(),
@@ -322,7 +319,7 @@
     if ( entity === 'all' ){
       _.each(this.cache, function( entity){
         entity.dataStoreCachable = true;
-      }
+      });
     } else {
       entity.dataStoreCachable = true;
     }

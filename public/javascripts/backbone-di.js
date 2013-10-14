@@ -57,10 +57,7 @@
    * <file/path> being the value passed into the first parameter.
    * loading is complete.
    */
-   //use entities rather than collections
-   //.lookup rather than get
-   //use urlRool for storage key
-   //
+   //use `urlRool` for storage key
   DataStore.prototype.lookup = function( entities, options ) {
     var self = this,
         dfd = $.Deferred(),
@@ -297,18 +294,36 @@
   /**
    * Disables the cache for a given entity
    * @param {Mixed} entity - model or collection
+   * accepts `all` to disable all or the model/collection
    */
   DataStore.prototype.disableCache = function( entity ) {
-    entity.dataStoreCachable = false;
-    this.removeFromLocalStorage( entity.dataStoreKey );
+    var self = this;
+    if ( entity === 'all' ){
+      _.each(this.cache, function(entity){
+        entity.dataStoreCachable = false;
+        self.removeFromLocalStorage( entity.dataStoreKey );  
+      });
+    } else {
+      entity.dataStoreCachable = false;
+      this.removeFromLocalStorage( entity.dataStoreKey );  
+    }
+    
   };
 
   /**
    * Enables the cache for a given entity
    * @param {Mixed} entity - model or collection
+   * accepts `all` to disable all or the model/collection
    */
   DataStore.prototype.enableCache = function( entity ) {
-    entity.dataStoreCachable = true;
+    if ( entity === 'all' ){
+      _.each(this.cache, function( entity){
+        entity.dataStoreCachable = true;
+      });
+    } else {
+      entity.dataStoreCachable = true;
+    }
+    
   };
 
 

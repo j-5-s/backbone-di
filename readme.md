@@ -67,6 +67,10 @@ define(['jquery', 'backbone', 'backbone-di'],
     events: {
     },
     render: function(){
+      this.$el.html('loading...');
+      return this;
+    },
+    renderReady: function(){
       this.$el.html('View loaded with model that has name \'' + this.model.get('name') + '\'');
       return this;
     }

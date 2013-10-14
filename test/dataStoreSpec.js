@@ -40,9 +40,9 @@ define(['jquery', 'backbone', 'models/OneModel', 'backbone-di'], function($, Bac
           });
 
           var oneModel4 = new OneModel();
-          oneModel4.dataStoreKey = 'models/OneModel';
+          //oneModel4.dataStoreKey = 'models/OneModel';
           oneModel4.id = 3;
-          Backbone.dataStore.lookup([oneModel4],{reset:true}).done(function(oneModel3){
+          Backbone.dataStore.lookup([oneModel4],{reset:true}).done(function(oneModel4){
             expect(oneModel4).toBeDefined();
             expect(oneModel4.get('name')).toEqual('ModelOne');
             d = true;

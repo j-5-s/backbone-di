@@ -136,9 +136,18 @@
               name.dataStoreKey = name.dataStoreKey+id;
               self.cache[name.dataStoreKey] = name;
             } else {
-              id = _.uniqueId('dataStore_');
-              name.dataStoreKey = id;
-              self.cache[id]  = name;
+
+              if ( name.urlRoot ) {
+                name.dataStoreKey = name.urlRoot;
+              } else if ( name.url ) {
+                name.dataStoreKey = name.url;
+              } else if (name.collection && name.collection.url ) {
+                name.dataStoreKey = name.collection.url
+              } else {
+                throw new Error('A url or urlRoot must be specified on the model/collection');
+              }
+              
+              self.cache[name.dataStoreKey] = name;
             }
             entities.splice(i,1);
           }

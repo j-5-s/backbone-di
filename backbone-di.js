@@ -176,6 +176,8 @@
       };
 
 
+
+
       _.each( entities, removeBackboneObjectFromEntity );
       _.each( entities, normalizeEntityToRequireJSPath );
 
@@ -214,7 +216,13 @@
           }
 
           self.cache[entities[i]] = new Arg(params);
-          self.cache[entities[i]].dataStoreKey = entities[i];
+          var entity = self.cache[entities[i]];
+          entity.dataStoreKey = entities[i];
+
+          
+          entity.dataStoreCachable = true;
+
+
 
           //need a flag to unbind
           if ( isCollection( self.cache[entities[i]] ) ) {
@@ -285,6 +293,43 @@
     return dfd.promise();
   };
 
+
+  /**
+   * Disables the cache for a given entity
+   * @param {Mixed} entity - model or collection
+   * accepts `all` to disable all or the model/collection
+   */
+  DataStore.prototype.disableCache = function( entity ) {
+    var self = this;
+    if ( entity === 'all' ){
+      _.each(this.cache, function(entity){
+        entity.dataStoreCachable = false;
+        self.removeFromLocalStorage( entity.dataStoreKey );  
+      });
+    } else {
+      entity.dataStoreCachable = false;
+      this.removeFromLocalStorage( entity.dataStoreKey );  
+    }
+    
+  };
+
+  /**
+   * Enables the cache for a given entity
+   * @param {Mixed} entity - model or collection
+   * accepts `all` to disable all or the model/collection
+   */
+  DataStore.prototype.enableCache = function( entity ) {
+    if ( entity === 'all' ){
+      _.each(this.cache, function( entity){
+        entity.dataStoreCachable = true;
+      }
+    } else {
+      entity.dataStoreCachable = true;
+    }
+    
+  };
+
+
   /**
    * Simple method to get the model/collection from the datastore
    * the method must first have been registered (see @register)
@@ -308,19 +353,36 @@
       return;
     }
 
+    // Helper to check if the model or collection
+    // has dataStoreCache flag on it saying not to cache
+    // defaults to `true` (cachable)
+    var isCacheable = function( entity ) {
+      if (entity.dataStoreCachable !== undef ) {
+        
+        return entity.dataStoreCachable;
+      }
+      return true;
+    };
+
+
+
     if ( obj === undef ) {
       try {
-        _.each(this.cache, function(modelOrCollection, key){
-          var strData = JSON.stringify(modelOrCollection.toJSON());
-          root.localStorage.setItem(key, strData);
+        _.each(this.cache, function(entity, key){
+          if ( isCacheable( entity ) ) {
+            var strData = JSON.stringify(entity.toJSON());
+            root.localStorage.setItem(key, strData);
+          }
         });
       } catch(e) {
         //local storage is probably not supported
       }
     } else {
       try {
-        var strData = JSON.stringify(obj.toJSON());
-        root.localStorage.setItem(obj.dataStoreKey, strData);
+        if ( isCacheable( obj ) ){
+          var strData = JSON.stringify(obj.toJSON());
+          root.localStorage.setItem(obj.dataStoreKey, strData);
+        }
       } catch(e) {
         //local storage is probably not supported
       }

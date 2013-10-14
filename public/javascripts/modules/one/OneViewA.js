@@ -12,6 +12,9 @@ define(['jquery',
         //could get model like this as well now
         //self.model = dataStore.lookup('models/OneModel?id=1');
         //but its simpler to use it in the parameter callback
+        
+        //Backbone.dataStore.disableCache( oneModel );
+        
         self.model = oneModel;
         self.model.on('change:name', self.renderReady);
         self.renderReady();

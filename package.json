@@ -1,6 +1,6 @@
 {
   "name": "backbone-di",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "DI/IoC for Backbone",
   "main": "index.js",
   "scripts": {},

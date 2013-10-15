@@ -138,11 +138,11 @@
             } else {
 
               if ( name.urlRoot ) {
-                name.dataStoreKey = name.urlRoot;
+                name.dataStoreKey = _.result( name, 'urlRoot' );
               } else if ( name.url ) {
-                name.dataStoreKey = name.url;
+                name.dataStoreKey = _.result( name, 'url' );
               } else if (name.collection && name.collection.url ) {
-                name.dataStoreKey = name.collection.url
+                name.dataStoreKey = _.result( name.collection, 'url' );
               } else {
                 throw new Error('A url or urlRoot must be specified on the model/collection');
               }
@@ -310,11 +310,11 @@
     if ( entity === 'all' ){
       _.each(this.cache, function(entity){
         entity.dataStoreCachable = false;
-        self.removeFromLocalStorage( entity.dataStoreKey );  
+        self.removeFromLocalStorage( entity.dataStoreKey );
       });
     } else {
       entity.dataStoreCachable = false;
-      this.removeFromLocalStorage( entity.dataStoreKey );  
+      this.removeFromLocalStorage( entity.dataStoreKey );
     }
     
   };

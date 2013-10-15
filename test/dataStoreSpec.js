@@ -5,13 +5,13 @@ define(['jquery', 'backbone', 'models/OneModel', 'backbone-di'], function($, Bac
       it('gets through string', function() {
           var completed = false;
           waitsFor( function(){
-            if ( a && b && c && d ) {
+            if ( a && b && c && d && e ) {
               completed = true;
             }
             return completed;
           },'Calls never completed', 10000);
           //runs( function(){
-            var a, b, c, d;
+            var a, b, c, d, e;
 
             Backbone.dataStore.lookup(['models/OneModel'],{reset:true}).done(function(oneModel){
               expect(oneModel).toBeDefined();
@@ -46,6 +46,16 @@ define(['jquery', 'backbone', 'models/OneModel', 'backbone-di'], function($, Bac
             expect(oneModel4).toBeDefined();
             expect(oneModel4.get('name')).toEqual('ModelOne');
             d = true;
+          });
+
+          var oneModel5 = new OneModel();
+          Backbone.dataStore.useLocalStorage = true;
+          oneModel5.id = 3;
+          Backbone.dataStore.lookup([oneModel5],{reset:true}).done(function(oneModel5){
+            Backbone.dataStore.disableCache( oneModel5 );
+            expect(oneModel5).toBeDefined();
+            expect(oneModel5.get('name')).toEqual('ModelOne');
+            e = true;
           });
       });
     });

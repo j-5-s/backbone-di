@@ -1,5 +1,5 @@
 //
-//  Backbone-di.js 0.0.3
+//  Backbone-di.js 0.0.5
 //
 //  (c) 2013 James Charlesworth
 //  Backbone-di may be freely distributed under the MIT license.
@@ -217,11 +217,17 @@
           //check for data in localStorage to populate with
           var data = self.getFromLocalStorage( entities[i] );
 
-          if (data) {
+          if ( _.toArray(data).length ) {
             params = data;
           }
 
-          self.cache[entities[i]] = new Arg(params);
+          var changedAttributes = true;
+          if (self.cache[entities[i]] && _.toArray(data)) {
+            changedAttributes = false;
+          }
+
+          //if the entity already exists, use it, otherwise create a new instance
+          self.cache[entities[i]] = self.cache[entities[i]] || new Arg(params);
           var entity = self.cache[entities[i]];
           entity.dataStoreKey = entities[i];
 
@@ -254,9 +260,9 @@
           //needs to be wrapped in function because
           //object, name, and data are used after fetch
           //is called.
-          (function( obj, name, data ){
+          (function( obj, name, data, changedAttributes ){
             //
-            if (data && !options.reset) {
+            if (_.toArray(data).length && !options.reset || !changedAttributes) {
               self.events.trigger('ready:'+ name, obj);
               entityDfd.resolve();
             } else {
@@ -269,7 +275,7 @@
               });
             }
 
-          }(self.cache[entities[i]],entities[i],data));
+          }(self.cache[entities[i]],entities[i],data, changedAttributes));
 
           dfds.push(entityDfd);
         });
